@@ -1,5 +1,5 @@
 package Eden_Moreno__and__Maor_Opatovsky;
 
-public enum Degree {
+public enum eDegree {
     BA, MA, PHD, PROFESSOR
 }
