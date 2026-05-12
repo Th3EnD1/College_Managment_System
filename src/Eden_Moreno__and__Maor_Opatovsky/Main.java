@@ -114,7 +114,7 @@ public static void main(String[] args) {
             case 7: {
                 System.out.print("Enter department name: ");
                 String departmentName = scanner.nextLine();
-                System.out.print("ת.ז. המרצה: ");
+                System.out.print("Enter lecturer ID: ");
                 int lecturerIdDepartment = scanner.nextInt();
                 System.out.println(college.addLecturerToDepartment(lecturerIdDepartment, departmentName));
                 break;

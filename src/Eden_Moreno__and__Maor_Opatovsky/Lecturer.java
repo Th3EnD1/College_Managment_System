@@ -1,7 +1,8 @@
 package Eden_Moreno__and__Maor_Opatovsky;
 
 public class Lecturer {
-    private static int id;
+    private static int counter;
+    private int id;
     private String name;
     private String degreeName;
     private eDegree degreeType;
@@ -13,7 +14,7 @@ public class Lecturer {
 
     public Lecturer(String name, eDegree degreeType, String degreeName, double salary) {
         this.name = name;
-        this.id = ++Lecturer.id;
+        this.id = ++counter;
         this.degreeType = degreeType;
         this.degreeName = degreeName;
         this.salary = salary;
@@ -71,7 +72,7 @@ public class Lecturer {
     public String toString() {
         String deptName = (department != null) ? department.getName() : "No departments";
         return String.format("Lecturer: %s | ID: %s | Degree: %s (%s) | Salary: %.2f | Department: %s | Member in committees: %s",
-                name, id, degreeType, degreeName, salary, deptName, getCommitteesNames());
+                name, this.id, degreeType, degreeName, salary, deptName, getCommitteesNames());
     }
 
 }
