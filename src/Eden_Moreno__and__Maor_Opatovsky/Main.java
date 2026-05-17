@@ -47,6 +47,10 @@ public static void main(String[] args) {
             case 1: {
                 System.out.println("Enter lecturer name: ");
                 String name = scanner.nextLine();
+                while (college.isLecturerSameName(name)) {
+                    System.out.print("A lecturer with this name already exists. Please enter a different name: \n");
+                    name = scanner.nextLine();
+                }
                 System.out.print("Degree Type (1-BA, 2-MA, 3-PHD, 4-PROFESSOR): ");
                 int degreeChoice = scanner.nextInt();
                 scanner.nextLine();

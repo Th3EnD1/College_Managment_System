@@ -26,6 +26,13 @@ public class College {
         return null;
     }
 
+    public boolean isLecturerSameName(String name) {
+        for (int i = 0; i < lecturersCount; i++) {
+            if (lecturers[i].getName().equals(name)) return true;
+        }
+        return false;
+    }
+
     public Committee findCommitteeByName(String name) {
         for (int i = 0; i < committeesCount; i++) {
             if (committees[i].getName().equals(name)) return committees[i];
