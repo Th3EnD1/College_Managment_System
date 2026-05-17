@@ -21,8 +21,26 @@ public class Department {
             expandLecturersArray();
         }
         lecturers[lecturersCount++] = l;
-        l.setDepartment(this);
+        l.addDepartment(this);
         return true;
+    }
+
+    public boolean removeLecturer(Lecturer l) {
+        int index = -1;
+        for (int i = 0; i < lecturersCount; i++) {
+            if (lecturers[i] == l) {
+                index = i;
+                break;
+            }
+        }
+        if (index != -1) {
+            l.removeDepartment(this);
+            lecturers[index] = lecturers[lecturersCount - 1];
+            lecturers[lecturersCount - 1] = null;
+            lecturersCount--;
+            return true;
+        }
+        return false;
     }
 
     private void expandLecturersArray() {
