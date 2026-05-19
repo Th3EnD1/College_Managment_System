@@ -12,10 +12,7 @@ public class Lecturer {
     private Committee[] committees;
     private int committeesCount;
 
-    private Department[] departments;
-    private int departmentsCount;
-
-    public Lecturer(String name, eDegree degreeType, String degreeName, double salary) {
+    public Lecturer(String name, eDegree degreeType, String degreeName, double salary, Department department) {
         this.name = name;
         this.id = ++counter;
         this.degreeType = degreeType;
@@ -24,8 +21,6 @@ public class Lecturer {
         this.department = null; // No default department
         this.committees = new Committee[2]; // Initial size
         this.committeesCount = 0;
-        this.departments = new Department[2]; // Initial size
-        this.departmentsCount = 0;
     }
 
     public void addCommittee(Committee c) {
@@ -33,13 +28,6 @@ public class Lecturer {
             expandCommitteesArray();
         }
         committees[committeesCount++] = c;
-    }
-
-    public void addDepartment(Department d) {
-        if (departmentsCount == departments.length) {
-            expandDepartmentsArray();
-        }
-        departments[departmentsCount++] = d;
     }
 
     public void removeCommittee(Committee c) {
@@ -57,21 +45,6 @@ public class Lecturer {
         }
     }
 
-    public void removeDepartment(Department d) {
-        int index = -1;
-        for (int i = 0; i < departmentsCount; i++) {
-            if (departments[i] == d) {
-                index = i;
-                break;
-            }
-        }
-        if (index != -1) {
-            departments[index] = departments[departmentsCount - 1]; // Override with last element
-            departments[departmentsCount - 1] = null;
-            departmentsCount--;
-        }
-    }
-
     private void expandCommitteesArray() {
         Committee[] newArr = new Committee[committees.length * 2];
         for (int i = 0; i < committeesCount; i++) {
@@ -80,20 +53,13 @@ public class Lecturer {
         this.committees = newArr;
     }
 
-    private void expandDepartmentsArray() {
-        Department[] newArr = new Department[departments.length * 2];
-        for (int i = 0; i < departmentsCount; i++) {
-            newArr[i] = departments[i];
-        }
-        this.departments = newArr;
-    }
-
     public int getId() { return id; }
     public String getName() { return name; }
     public eDegree getDegreeType() { return degreeType; }
     public double getSalary() { return salary; }
     public String getDegreeName() { return degreeName;};
     public void setDepartment(Department dept) { this.department = dept; }
+    public Department getDepartment() { return department; }
 
     public String getCommitteesNames() {
         if (committeesCount == 0) return "No committees";
@@ -105,19 +71,15 @@ public class Lecturer {
         return names;
     }
 
-    public String getDepartmentsNames() {
-        if (departmentsCount == 0) return "No departments";
-        String names = "";
-        for (int i = 0; i < departmentsCount; i++) {
-            names += departments[i].getName();
-            if (i < departmentsCount - 1) names += ", ";
-        }
-        return names;
-    }
-
     public String toString() {
-        return "Lecturer: " + getName() + " | ID: " + getId() + " | Degree: " + getDegreeType() + " (" + getDegreeName() + ") | Salary: "
-                + getSalary() + " | Departments: " + getDepartmentsNames() + " Member in committees: " + getCommitteesNames();
+        String string = "Lecturer: " + getName() + " | ID: " + getId() + " | Degree: " + getDegreeType() + " (" + getDegreeName() + ") | Salary: "
+                + getSalary() + " | Department: ";
+        if (getDepartment() == null) { string += "No department | ";}
+        else {string += getDepartment().getName() + " | ";}
+        string += "Member in committees: ";
+        if (getCommitteesNames() == "") { string += "No committees | ";}
+        else {string += getCommitteesNames();}
+        return string;
     }
 
 }

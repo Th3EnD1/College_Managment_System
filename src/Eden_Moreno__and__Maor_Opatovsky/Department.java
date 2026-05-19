@@ -30,7 +30,7 @@ public class Department {
             expandLecturersArray();
         }
         lecturers[lecturersCount++] = l;
-        l.addDepartment(this);
+        l.setDepartment(this);
         return true;
     }
 
@@ -43,7 +43,7 @@ public class Department {
             }
         }
         if (index != -1) {
-            l.removeDepartment(this);
+            l.setDepartment(null);
             lecturers[index] = lecturers[lecturersCount - 1];
             lecturers[lecturersCount - 1] = null;
             lecturersCount--;

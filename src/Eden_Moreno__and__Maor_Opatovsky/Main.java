@@ -1,7 +1,4 @@
-import Eden_Moreno__and__Maor_Opatovsky.College;
-import Eden_Moreno__and__Maor_Opatovsky.Department;
-import Eden_Moreno__and__Maor_Opatovsky.Lecturer;
-import Eden_Moreno__and__Maor_Opatovsky.eDegree;
+import Eden_Moreno__and__Maor_Opatovsky.*;
 
 import java.util.Scanner;
 
@@ -11,6 +8,32 @@ import java.util.Scanner;
  * */
 
 public static void main(String[] args) {
+    // --- DATA FOR DEBUG ---
+    //    College testCollege = new College("Test College");
+    //    Lecturer lecturer1 = new Lecturer("lecturer1", eDegree.PHD, "Math", 30000, null);
+    //    Lecturer lecturer2 = new Lecturer("lecturer2", eDegree.PROFESSOR, "Math", 20000, null);
+    //    Lecturer lecturer3 = new Lecturer("lecturer3", eDegree.MA, "Computer Science", 10000, null);
+    //    Department department1 = new Department("Math", 30);
+    //    Department department2 = new Department("Computer Science", 30);
+    //    Committee committee1 = new Committee("Tests", lecturer1);
+    //    Committee committee2 = new Committee("Finance", lecturer2);
+    //    testCollege.addLecturer(lecturer1);
+    //    testCollege.addLecturer(lecturer2);
+    //    testCollege.addLecturer(lecturer3);
+    //    testCollege.addDepartment(department1);
+    //    testCollege.addDepartment(department2);
+    //    testCollege.addCommittee("Tests", 1);
+    //    testCollege.addCommittee("Finance", 2);
+    //    lecturer1.setDepartment(department1);
+    //    testCollege.addMemberToCommittee(1, "Finance");
+    //    testCollege.addMemberToCommittee(3, "Finance");
+    //    testCollege.addMemberToCommittee(3, "Tests");
+    //    System.out.println(testCollege.getAllLecturers());
+    //    System.out.println(testCollege.getAllCommittees());
+    //    lecturer1.setDepartment(department2);
+    //    System.out.println(testCollege.getAllLecturers());
+    // --- END OF DEBUG DATA ---
+
     Scanner scanner = new Scanner(System.in);
 
     System.out.print("Enter College Name: ");
@@ -64,7 +87,7 @@ public static void main(String[] args) {
                 double salary = scanner.nextDouble();
                 scanner.nextLine();
 
-                college.addLecturer(new Lecturer(name, degree, degreeName, salary));
+                college.addLecturer(new Lecturer(name, degree, degreeName, salary, null));
                 System.out.println("Lecturer has been added.");
                 break;
             }
