@@ -7,49 +7,50 @@ public class Committee {
     private int membersCount;
 
     public Committee(String name, Lecturer chairman) {
-        this.name = name;
-        this.chairman = chairman;
-        this.members = new Lecturer[2];
-        this.membersCount = 0;
+        setName(name);
+        setChairman(chairman);
+        setMembersCount(0);
+        setMembers(new Lecturer[2]);
     }
 
     public boolean addMember(Lecturer l) {
-        if (l == chairman) return false; // Chairman can't be a member
-        for (int i = 0; i < membersCount; i++) {
-            if (members[i] == l) return false; // Already exists
+        if (l == getChairman()) return false; // Chairman can't be a member
+        for (int i = 0; i < getMembersCount(); i++) {
+            if (getMembers()[i] == l) return false; // Already exists
         }
-        if (membersCount == members.length) {
+        if (getMembersCount() == getMembers().length) {
             expandMembersArray();
         }
-        members[membersCount++] = l;
+        getMembers()[getMembersCount()] = l;
+        setMembersCount(getMembersCount() + 1);
         l.addCommittee(this);
         return true;
     }
 
     public boolean removeMember(Lecturer l) {
         int index = -1;
-        for (int i = 0; i < membersCount; i++) {
-            if (members[i] == l) {
+        for (int i = 0; i < getMembersCount(); i++) {
+            if (getMembers()[i] == l) {
                 index = i;
                 break;
             }
         }
         if (index != -1) {
             l.removeCommittee(this);
-            members[index] = members[membersCount - 1];
-            members[membersCount - 1] = null;
-            membersCount--;
+            getMembers()[index] = getMembers()[getMembersCount() - 1];
+            getMembers()[getMembersCount() - 1] = null;
+            setMembersCount(getMembersCount() - 1);
             return true;
         }
         return false;
     }
 
     private void expandMembersArray() {
-        Lecturer[] newArr = new Lecturer[members.length * 2];
-        for (int i = 0; i < membersCount; i++) {
-            newArr[i] = members[i];
+        Lecturer[] newArr = new Lecturer[getMembers().length * 2];
+        for (int i = 0; i < getMembersCount(); i++) {
+            newArr[i] = getMembers()[i];
         }
-        this.members = newArr;
+        setMembers(newArr);
     }
 
     public boolean setChairman(Lecturer newChairman) {
@@ -62,15 +63,21 @@ public class Committee {
         return true;
     }
 
-    public String getName() { return name; }
-    public Lecturer getChairman() { return chairman; }
+    public String getName() { return this.name; }
+    public void setName(String name) { this.name = name; }
+    public Lecturer getChairman() { return this.chairman; }
+    public int getMembersCount() {return this.membersCount;}
+    public void setMembersCount(int membersCount) {this.membersCount = membersCount;}
+    public Lecturer[] getMembers() { return this.members; }
+    public void setMembers(Lecturer[] members) { this.members = members; }
+
 
     public String toString() {
-        String res = "Committee: " + name + " | Chairman: " + chairman.getName() + " | Number of members: " + membersCount;
-        if (membersCount > 0) {
+        String res = "Committee: " + name + " | Chairman: " + chairman.getName() + " | Number of members: " + getMembersCount();
+        if (getMembersCount() > 0) {
             res += "\n  Committee members: ";
-            for (int i = 0; i < membersCount; i++) {
-                res += members[i].getName() + (i < membersCount - 1 ? ", " : "");
+            for (int i = 0; i < getMembersCount(); i++) {
+                res += getMembers()[i].getName() + (i < getMembersCount() - 1 ? ", " : "");
             }
         }
         return res;
