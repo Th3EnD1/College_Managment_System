@@ -32,6 +32,8 @@ public static void main(String[] args) {
     //    System.out.println(testCollege.getAllCommittees());
     //    lecturer1.setDepartment(department2);
     //    System.out.println(testCollege.getAllLecturers());
+    //    System.out.println();
+    //    System.out.println(testCollege.toString());
     // --- END OF DEBUG DATA ---
 
     Scanner scanner = new Scanner(System.in);

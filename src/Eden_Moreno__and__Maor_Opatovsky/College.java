@@ -5,6 +5,18 @@ public class College {
     private Lecturer[] lecturers;
     private int lecturersCount;
     private Department[] departments;
+    private int departmentsCount;
+    private Committee[] committees;
+    private int committeesCount;
+
+    public College(String name) {
+        setName(name);
+        setLecturers(new Lecturer[2]);
+        setCommitteesCount(0);
+        setCommittees(new Committee[2]);
+        setDepartmentsCount(0);
+        setDepartments(new Department[2]);
+    }
 
     public int getCommitteesCount() {return this.committeesCount;}
     public void setCommitteesCount(int committeesCount) {this.committeesCount = committeesCount;}
@@ -20,19 +32,6 @@ public class College {
     public void setLecturers(Lecturer[] lecturers) {this.lecturers = lecturers;}
     public String getName() {return this.name;}
     public void setName(String name) {this.name = name;}
-
-    private int departmentsCount;
-    private Committee[] committees;
-    private int committeesCount;
-
-    public College(String name) {
-        setName(name);
-        setLecturers(new Lecturer[2]);
-        setCommitteesCount(0);
-        setCommittees(new Committee[2]);
-        setDepartmentsCount(0);
-        setDepartments(new Department[2]);
-    }
 
     public Lecturer findLecturerById(int id) {
         for (int i = 0; i < getLecturersCount(); i++) {
@@ -178,5 +177,10 @@ public class College {
         Committee[] newArr = new Committee[getCommittees().length * 2];
         for (int i = 0; i < getCommitteesCount(); i++) newArr[i] = getCommittees()[i];
         setCommittees(newArr);
+    }
+
+    public String toString() {
+        return "College name: " + getName() + " | Number of lecturers: " + getLecturersCount() + " | "
+                + "Number of departments: " + getDepartmentsCount() + " | Number of committees: " + getCommitteesCount();
     }
 }
