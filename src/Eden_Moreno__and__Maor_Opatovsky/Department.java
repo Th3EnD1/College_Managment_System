@@ -4,6 +4,15 @@ public class Department {
     private String name;
     private int numStudents;
     private Lecturer[] lecturers;
+
+    public int getLecturersCount() {
+        return lecturersCount;
+    }
+
+    public void setLecturersCount(int lecturersCount) {
+        this.lecturersCount = lecturersCount;
+    }
+
     private int lecturersCount;
 
     public Department(String name, int numStudents) {

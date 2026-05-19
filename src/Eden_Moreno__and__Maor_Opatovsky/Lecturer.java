@@ -92,6 +92,7 @@ public class Lecturer {
     public String getName() { return name; }
     public eDegree getDegreeType() { return degreeType; }
     public double getSalary() { return salary; }
+    public String getDegreeName() { return degreeName;};
     public void setDepartment(Department dept) { this.department = dept; }
 
     public String getCommitteesNames() {
@@ -115,8 +116,8 @@ public class Lecturer {
     }
 
     public String toString() {
-        return String.format("Lecturer: %s | ID: %s | Degree: %s (%s) | Salary: %.2f | Departments: %s | Member in committees: %s",
-                name, this.id, degreeType, degreeName, salary, getDepartmentsNames(), getCommitteesNames());
+        return "Lecturer: " + getName() + " | ID: " + getId() + " | Degree: " + getDegreeType() + " (" + getDegreeName() + ") | Salary: "
+                + getSalary() + " | Departments: " + getDepartmentsNames() + " Member in committees: " + getCommitteesNames();
     }
 
 }
