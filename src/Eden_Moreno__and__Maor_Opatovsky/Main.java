@@ -68,82 +68,31 @@ public static void main(String[] args) {
                 break;
             }
             case 1: {
-                System.out.println("Enter lecturer name: ");
-                String name = scanner.nextLine();
-                while (college.findLecturerByName(name) != null) {
-                    System.out.print("A lecturer with this name already exists. Please enter a different name: \n");
-                    name = scanner.nextLine();
-                }
-                System.out.print("Degree Type (1-BA, 2-MA, 3-PHD, 4-PROFESSOR): ");
-                int degreeChoice = scanner.nextInt();
-                scanner.nextLine();
-                eDegree degree = eDegree.BA;
-                if (degreeChoice == 2) degree = eDegree.MA;
-                else if (degreeChoice == 3) degree = eDegree.PHD;
-                else if (degreeChoice == 4) degree = eDegree.PROFESSOR;
-                System.out.println("Enter degree name: ");
-                String degreeName = scanner.nextLine();
-                System.out.println("Enter salary: ");
-                double salary = scanner.nextDouble();
-                scanner.nextLine();
-
-                college.addLecturer(new Lecturer(name, degree, degreeName, salary, null));
-                System.out.println("Lecturer has been added.");
+                addNewLecturerToCollege(college, scanner);
                 break;
             }
             case 2: {
-                System.out.print("Enter committee name: ");
-                String commName = scanner.nextLine();
-                System.out.print("Enter chairman ID: ");
-                int chairId = scanner.nextInt();
-                System.out.println(college.addCommittee(commName, chairId));
+                addNewCommitteeToCollege(college, scanner);
                 break;
             }
             case 3: {
-                System.out.print("Enter committee name: ");
-                String committeeNameAdd = scanner.nextLine();
-                System.out.print("Enter lecturer's ID: ");
-                int lecturerIdAdd = scanner.nextInt();
-                System.out.println(college.addMemberToCommittee(lecturerIdAdd, committeeNameAdd));
+                addMemberToCommitteeInCollege(college, scanner);
                 break;
             }
             case 4: {
-                System.out.print("Enter committee name: ");
-                String committeeNameUpdate = scanner.nextLine();
-                System.out.print("Enter new chairman's ID: ");
-                int lecturerIdUpdate = scanner.nextInt();
-                System.out.println(college.updateCommitteeChairman(committeeNameUpdate, lecturerIdUpdate));
+                updateCommitteeChairmanInCollege(college, scanner);
                 break;
             }
             case 5: {
-                System.out.print("Enter committee name: ");
-                String committeeNameRemove = scanner.nextLine();
-                System.out.print("Enter lecturer's ID for removal: ");
-                int lecturerIdRemove = scanner.nextInt();
-                System.out.println(college.removeMemberFromCommittee(lecturerIdRemove, committeeNameRemove));
+                removeMemberFromCommitteeInCollege(college, scanner);
                 break;
             }
             case 6: {
-                System.out.print("Enter department name: ");
-                String departmentName = scanner.nextLine();
-                while (college.findDepartmentByName(departmentName) != null) {
-                    System.out.print("A department with this name already exists. Please enter a different name: ");
-                    departmentName = scanner.nextLine();
-                }
-                System.out.print("Enter a maximum number for students in the department: ");
-                int maxStudentsNum = scanner.nextInt();
-                scanner.nextLine();
-
-                college.addDepartment(new Department(departmentName, maxStudentsNum));
-                System.out.println("Department has been added.");
+                addNewDepartmentToCollege(college, scanner);
                 break;
             }
             case 7: {
-                System.out.print("Enter department name: ");
-                String departmentName = scanner.nextLine();
-                System.out.print("Enter lecturer ID: ");
-                int lecturerIdDepartment = scanner.nextInt();
-                System.out.println(college.addLecturerToDepartment(lecturerIdDepartment, departmentName));
+                addLecturerToDepartmentInCollege(college, scanner);
                 break;
             }
             case 8: {
@@ -151,21 +100,15 @@ public static void main(String[] args) {
                 break;
             }
             case 9: {
-                System.out.print("Enter department name: ");
-                String departmentNameAvg = scanner.nextLine();
-                double avg = college.getDepartmentAverageSalary(departmentNameAvg);
-                if (avg == -1) System.out.println("Department not found.");
-                else System.out.printf("Average salaries in department %s: %.2f\n", departmentNameAvg, avg);
+                showLecturersSalariesAverageInDepartment(college, scanner);
                 break;
             }
             case 10: {
-                System.out.println("--- All Lecturers ---");
-                System.out.println(college.getAllLecturers());
+                showAllLecturersInCollege(college, scanner);
                 break;
             }
             case 11: {
-                System.out.println("--- All Committees ---");
-                System.out.println(college.getAllCommittees());
+                showAllCommitteesInCollege(college, scanner);
                 break;
             }
             default: {
@@ -176,4 +119,101 @@ public static void main(String[] args) {
     }
 
     scanner.close();
+}
+
+public static void addNewLecturerToCollege(College college,Scanner scanner) {
+    System.out.println("Enter lecturer name: ");
+    String name = scanner.nextLine();
+    while (college.findLecturerByName(name) != null) {
+        System.out.print("A lecturer with this name already exists. Please enter a different name: \n");
+        name = scanner.nextLine();
+    }
+    System.out.print("Degree Type (1-BA, 2-MA, 3-PHD, 4-PROFESSOR): ");
+    int degreeChoice = scanner.nextInt();
+    scanner.nextLine();
+    eDegree degree = eDegree.BA;
+    if (degreeChoice == 2) degree = eDegree.MA;
+    else if (degreeChoice == 3) degree = eDegree.PHD;
+    else if (degreeChoice == 4) degree = eDegree.PROFESSOR;
+    System.out.println("Enter degree name: ");
+    String degreeName = scanner.nextLine();
+    System.out.println("Enter salary: ");
+    double salary = scanner.nextDouble();
+    scanner.nextLine();
+
+    college.addLecturer(new Lecturer(name, degree, degreeName, salary, null));
+    System.out.println("Lecturer has been added.");
+}
+
+public static void addNewCommitteeToCollege(College college, Scanner scanner) {
+    System.out.print("Enter committee name: ");
+    String commName = scanner.nextLine();
+    System.out.print("Enter chairman ID: ");
+    int chairId = scanner.nextInt();
+    System.out.println(college.addCommittee(commName, chairId));
+}
+
+public static void addMemberToCommitteeInCollege(College college, Scanner scanner) {
+    System.out.print("Enter committee name: ");
+    String committeeNameAdd = scanner.nextLine();
+    System.out.print("Enter lecturer's ID: ");
+    int lecturerIdAdd = scanner.nextInt();
+    System.out.println(college.addMemberToCommittee(lecturerIdAdd, committeeNameAdd));
+}
+
+public static void updateCommitteeChairmanInCollege(College college, Scanner scanner) {
+    System.out.print("Enter committee name: ");
+    String committeeNameUpdate = scanner.nextLine();
+    System.out.print("Enter new chairman's ID: ");
+    int lecturerIdUpdate = scanner.nextInt();
+    System.out.println(college.updateCommitteeChairman(committeeNameUpdate, lecturerIdUpdate));
+}
+
+public static void removeMemberFromCommitteeInCollege(College college, Scanner scanner) {
+    System.out.print("Enter committee name: ");
+    String committeeNameRemove = scanner.nextLine();
+    System.out.print("Enter lecturer's ID for removal: ");
+    int lecturerIdRemove = scanner.nextInt();
+    System.out.println(college.removeMemberFromCommittee(lecturerIdRemove, committeeNameRemove));
+}
+
+public static void addNewDepartmentToCollege(College college, Scanner scanner) {
+    System.out.print("Enter department name: ");
+    String departmentName = scanner.nextLine();
+    while (college.findDepartmentByName(departmentName) != null) {
+        System.out.print("A department with this name already exists. Please enter a different name: ");
+        departmentName = scanner.nextLine();
+    }
+    System.out.print("Enter a maximum number for students in the department: ");
+    int maxStudentsNum = scanner.nextInt();
+    scanner.nextLine();
+
+    college.addDepartment(new Department(departmentName, maxStudentsNum));
+    System.out.println("Department has been added.");
+}
+
+public static void addLecturerToDepartmentInCollege(College college, Scanner scanner) {
+    System.out.print("Enter department name: ");
+    String departmentName = scanner.nextLine();
+    System.out.print("Enter lecturer ID: ");
+    int lecturerIdDepartment = scanner.nextInt();
+    System.out.println(college.addLecturerToDepartment(lecturerIdDepartment, departmentName));
+}
+
+public static void showLecturersSalariesAverageInDepartment(College college, Scanner scanner) {
+    System.out.print("Enter department name: ");
+    String departmentNameAvg = scanner.nextLine();
+    double avg = college.getDepartmentAverageSalary(departmentNameAvg);
+    if (avg == -1) System.out.println("Department not found.");
+    else System.out.printf("Average salaries in department %s: %.2f\n", departmentNameAvg, avg);
+}
+
+public static void showAllLecturersInCollege(College college, Scanner scanner) {
+    System.out.println("--- All Lecturers ---");
+    System.out.println(college.getAllLecturers());
+}
+
+public static void showAllCommitteesInCollege(College college, Scanner scanner) {
+    System.out.println("--- All Committees ---");
+    System.out.println(college.getAllCommittees());
 }
