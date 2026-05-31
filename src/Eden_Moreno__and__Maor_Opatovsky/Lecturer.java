@@ -61,7 +61,12 @@ public class Lecturer {
     public eDegree getDegreeType() { return this.degreeType; }
     public void setDegreeType(eDegree degreeType) { this.degreeType = degreeType; }
     public double getSalary() { return this.salary; }
-    public void setSalary(double salary) { this.salary = salary; }
+    public boolean setSalary(double salary) {
+        if (salary <= 0)
+            return false;
+        this.salary = salary;
+        return true;
+    }
     public String getDegreeName() { return this.degreeName;};
     public void setDegreeName(String degreeName) { this.degreeName = degreeName; }
     public void setDepartment(Department dept) { this.department = dept; }
