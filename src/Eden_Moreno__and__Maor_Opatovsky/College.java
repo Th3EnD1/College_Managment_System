@@ -18,20 +18,20 @@ public class College {
         setDepartments(new Department[2]);
     }
 
-    public int getCommitteesCount() {return this.committeesCount;}
-    public void setCommitteesCount(int committeesCount) {this.committeesCount = committeesCount;}
-    public Committee[] getCommittees() {return this.committees;}
-    public void setCommittees(Committee[] committees) {this.committees = committees;}
-    public int getDepartmentsCount() {return this.departmentsCount;}
-    public void setDepartmentsCount(int departmentsCount) {this.departmentsCount = departmentsCount;}
-    public Department[] getDepartments() {return this.departments;}
-    public void setDepartments(Department[] departments) {this.departments = departments;}
-    public int getLecturersCount() {return this.lecturersCount;}
-    public void setLecturersCount(int lecturersCount) {this.lecturersCount = lecturersCount;}
-    public Lecturer[] getLecturers() {return this.lecturers;}
-    public void setLecturers(Lecturer[] lecturers) {this.lecturers = lecturers;}
-    public String getName() {return this.name;}
-    public void setName(String name) {this.name = name;}
+    public int getCommitteesCount() { return this.committeesCount; }
+    public void setCommitteesCount(int committeesCount) { this.committeesCount = committeesCount; }
+    public Committee[] getCommittees() { return this.committees; }
+    public void setCommittees(Committee[] committees) { this.committees = committees; }
+    public int getDepartmentsCount() { return this.departmentsCount; }
+    public void setDepartmentsCount(int departmentsCount) { this.departmentsCount = departmentsCount; }
+    public Department[] getDepartments() { return this.departments; }
+    public void setDepartments(Department[] departments) { this.departments = departments; }
+    public int getLecturersCount() { return this.lecturersCount; }
+    public void setLecturersCount(int lecturersCount) { this.lecturersCount = lecturersCount; }
+    public Lecturer[] getLecturers() { return this.lecturers; }
+    public void setLecturers(Lecturer[] lecturers) { this.lecturers = lecturers; }
+    public String getName() { return this.name; }
+    public void setName(String name) { this.name = name; }
 
     public Lecturer findLecturerById(int id) {
         for (int i = 0; i < getLecturersCount(); i++) {
@@ -61,78 +61,96 @@ public class College {
         return null;
     }
 
-    // Additions to the main arrays
-    public boolean addLecturer(Lecturer l) {
-        if (findLecturerById(l.getId()) != null) return false;
+    public void addLecturer(Lecturer l) throws CollegeSystemException {
+        if (findLecturerById(l.getId()) != null) {
+            throw new CollegeSystemException("Lecturer ID already exists.");
+        }
         if (getLecturersCount() == getLecturers().length) expandLecturers();
         getLecturers()[getLecturersCount()] = l;
         setLecturersCount(getLecturersCount() + 1);
-        return true;
     }
 
-    public String addCommittee(String committeeName, int chairmanId) {
-        if (findCommitteeByName(committeeName) != null) return "Committee name already exists";
+    public void addCommittee(String committeeName, int chairmanId) throws CollegeSystemException {
+        if (findCommitteeByName(committeeName) != null) {
+            throw new CollegeSystemException("Committee name already exists.");
+        }
         Lecturer chairman = findLecturerById(chairmanId);
-        if (chairman == null) return "The lecturer (chairman) have not been found.";
-        if (chairman.getDegreeType() != eDegree.PHD && chairman.getDegreeType() != eDegree.PROFESSOR) {
-            return "Chairman of the committee must have a PhD or Professor degree.";
+        if (chairman == null) {
+            throw new CollegeSystemException("The lecturer (chairman) has not been found.");
+        }
+        if (!(chairman instanceof Doctor)) {
+            throw new CollegeSystemException("Chairman of the committee must be a PhD or Professor.");
         }
         if (getCommitteesCount() == getCommittees().length) expandCommittees();
-        getCommittees()[getCommitteesCount()] = new Committee(committeeName, chairman);
+        getCommittees()[getCommitteesCount()] = new Committee(committeeName, (Doctor) chairman);
         setCommitteesCount(getCommitteesCount() + 1);
-        return "Committee has been added.";
+        System.out.println("Committee " + committeeName + " has been added.");
     }
 
-    public boolean addDepartment(Department d) {
-        if (findDepartmentByName(d.getName()) != null) return false;
+    public void addDepartment(Department d) throws CollegeSystemException {
+        if (findDepartmentByName(d.getName()) != null) {
+            throw new CollegeSystemException("Department name already exists.");
+        }
         if (getDepartmentsCount() == getDepartments().length) expandDepartments();
         getDepartments()[getDepartmentsCount()] = d;
         setDepartmentsCount(getDepartmentsCount() + 1);
-        return true;
+        System.out.println("Department " + d.getName() + " has been added.");
     }
 
-    // Actions and connections
-    public String addMemberToCommittee(int lecturerId, String committeeName) {
+    public void addMemberToCommittee(int lecturerId, String committeeName) throws CollegeSystemException {
         Lecturer l = findLecturerById(lecturerId);
-        if (l == null) return "Lecturer not found.";
+        if (l == null) throw new CollegeSystemException("Lecturer not found.");
         Committee c = findCommitteeByName(committeeName);
-        if (c == null) return "Committee not found.";
+        if (c == null) throw new CollegeSystemException("Committee not found.");
 
-        boolean success = c.addMember(l);
-        return success ? "Member added successfully to the committee." : "Add failed (may already be a member or chairman).";
+        c.addMember(l);
+        System.out.println("Member " + l.getName() + " has been added to the committee " + committeeName + ".");
     }
 
-    public String updateCommitteeChairman(String committeeName, int newChairmanId) {
+    public void updateCommitteeChairman(String committeeName, int newChairmanId) throws CollegeSystemException {
         Committee c = findCommitteeByName(committeeName);
-        if (c == null) return "Committee not found.";
+        if (c == null) throw new CollegeSystemException("Committee not found.");
         Lecturer l = findLecturerById(newChairmanId);
-        if (l == null) return "Lecturer not found.";
+        if (l == null) throw new CollegeSystemException("Lecturer not found.");
+        if (!(l instanceof Doctor)) {
+            throw new CollegeSystemException("New chairman must be a PhD or Professor.");
+        }
 
-        boolean success = c.setChairman(l);
-        return success ? "Chairman updated successfully." : "Update failed. Please ensure the lecturer has a PhD or Professor degree.";
+        c.setChairman((Doctor) l);
+        System.out.println("Chairman of the committee " + committeeName + " has been updated to " + l.getName() + ".");
     }
 
-    public String removeMemberFromCommittee(int lecturerId, String committeeName) {
+    public void removeMemberFromCommittee(int lecturerId, String committeeName) throws CollegeSystemException {
         Lecturer l = findLecturerById(lecturerId);
-        if (l == null) return "Lecturer not found.";
+        if (l == null) throw new CollegeSystemException("Lecturer not found.");
         Committee c = findCommitteeByName(committeeName);
-        if (c == null) return "Committee not found.";
+        if (c == null) throw new CollegeSystemException("Committee not found.");
 
-        boolean success = c.removeMember(l);
-        return success ? "Lecturer removed from the committee." : "Lecturer is not a member in the committee.";
+        c.removeMember(l);
+        System.out.println("Member " + l.getName() + " has been removed from the committee " + committeeName + ".");
     }
 
-    public String addLecturerToDepartment(int lecturerId, String deptName) {
+    public void addLecturerToDepartment(int lecturerId, String deptName) throws CollegeSystemException {
         Lecturer l = findLecturerById(lecturerId);
-        if (l == null) return "Lecturer not found.";
+        if (l == null) throw new CollegeSystemException("Lecturer not found.");
         Department d = findDepartmentByName(deptName);
-        if (d == null) return "Department not found.";
+        if (d == null) throw new CollegeSystemException("Department not found.");
 
-        boolean success = d.addLecturer(l);
-        return success ? "Lecturer added to the department." : "Lecturer already exists in the department.";
+        d.addLecturer(l);
     }
 
-    // Queries and information
+    public void cloneCommittee(String committeeName) throws CollegeSystemException {
+        Committee c = findCommitteeByName(committeeName);
+        if (c == null) throw new CollegeSystemException("Committee not found.");
+        Committee cloned = c.clone();
+        if (cloned == null) throw new CollegeSystemException("Failed to clone committee.");
+        
+        if (getCommitteesCount() == getCommittees().length) expandCommittees();
+        getCommittees()[getCommitteesCount()] = cloned;
+        setCommitteesCount(getCommitteesCount() + 1);
+        System.out.println("Committee " + committeeName + " has been cloned.");
+    }
+
     public double getCollegeAverageSalary() {
         if (getLecturersCount() == 0) return 0;
         double sum = 0;
@@ -160,7 +178,6 @@ public class College {
         return res;
     }
 
-    // Increasing arrays by 2 times
     private void expandLecturers() {
         Lecturer[] newArr = new Lecturer[getLecturers().length * 2];
         for (int i = 0; i < getLecturersCount(); i++) newArr[i] = getLecturers()[i];
@@ -179,6 +196,15 @@ public class College {
         setCommittees(newArr);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        College other = (College) obj;
+        return this.name.equals(other.name);
+    }
+
+    @Override
     public String toString() {
         return "College name: " + getName() + " | Number of lecturers: " + getLecturersCount() + " | "
                 + "Number of departments: " + getDepartmentsCount() + " | Number of committees: " + getCommitteesCount();
