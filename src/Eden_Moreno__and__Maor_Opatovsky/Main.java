@@ -1,7 +1,5 @@
 package Eden_Moreno__and__Maor_Opatovsky;
 
-import Eden_Moreno__and__Maor_Opatovsky.*;
-
 import java.util.Scanner;
 
 /*
@@ -12,31 +10,34 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         // --- DATA FOR DEBUG ---
-        //    College testCollege = new College("Test College");
-        //    Lecturer lecturer1 = new Lecturer("lecturer1", eDegree.PHD, "Math", 30000, null);
-        //    Lecturer lecturer2 = new Lecturer("lecturer2", eDegree.PROFESSOR, "Math", 20000, null);
-        //    Lecturer lecturer3 = new Lecturer("lecturer3", eDegree.MA, "Computer Science", 10000, null);
-        //    Department department1 = new Department("Math", 30);
-        //    Department department2 = new Department("Computer Science", 30);
-        //    Committee committee1 = new Committee("Tests", lecturer1);
-        //    Committee committee2 = new Committee("Finance", lecturer2);
-        //    testCollege.addLecturer(lecturer1);
-        //    testCollege.addLecturer(lecturer2);
-        //    testCollege.addLecturer(lecturer3);
-        //    testCollege.addDepartment(department1);
-        //    testCollege.addDepartment(department2);
-        //    testCollege.addCommittee("Tests", 1);
-        //    testCollege.addCommittee("Finance", 2);
-        //    lecturer1.setDepartment(department1);
-        //    testCollege.addMemberToCommittee(1, "Finance");
-        //    testCollege.addMemberToCommittee(3, "Finance");
-        //    testCollege.addMemberToCommittee(3, "Tests");
-        //    System.out.println(testCollege.getAllLecturers());
-        //    System.out.println(testCollege.getAllCommittees());
-        //    lecturer1.setDepartment(department2);
-        //    System.out.println(testCollege.getAllLecturers());
-        //    System.out.println();
-        //    System.out.println(testCollege.toString());
+        // College testCollege = new College("Test College");
+        // Lecturer lecturer1 = new Lecturer("lecturer1", eDegree.PHD, "Math", 30000,
+        // null);
+        // Lecturer lecturer2 = new Lecturer("lecturer2", eDegree.PROFESSOR, "Math",
+        // 20000, null);
+        // Lecturer lecturer3 = new Lecturer("lecturer3", eDegree.MA, "Computer
+        // Science", 10000, null);
+        // Department department1 = new Department("Math", 30);
+        // Department department2 = new Department("Computer Science", 30);
+        // Committee committee1 = new Committee("Tests", lecturer1);
+        // Committee committee2 = new Committee("Finance", lecturer2);
+        // testCollege.addLecturer(lecturer1);
+        // testCollege.addLecturer(lecturer2);
+        // testCollege.addLecturer(lecturer3);
+        // testCollege.addDepartment(department1);
+        // testCollege.addDepartment(department2);
+        // testCollege.addCommittee("Tests", 1);
+        // testCollege.addCommittee("Finance", 2);
+        // lecturer1.setDepartment(department1);
+        // testCollege.addMemberToCommittee(1, "Finance");
+        // testCollege.addMemberToCommittee(3, "Finance");
+        // testCollege.addMemberToCommittee(3, "Tests");
+        // System.out.println(testCollege.getAllLecturers());
+        // System.out.println(testCollege.getAllCommittees());
+        // lecturer1.setDepartment(department2);
+        // System.out.println(testCollege.getAllLecturers());
+        // System.out.println();
+        // System.out.println(testCollege.toString());
         // --- END OF DEBUG DATA ---
 
         Scanner scanner = new Scanner(System.in);
@@ -126,7 +127,7 @@ public class Main {
         scanner.close();
     }
 
-    public static void addNewLecturerToCollege(College college,Scanner scanner) {
+    public static void addNewLecturerToCollege(College college, Scanner scanner) {
         System.out.println("Enter lecturer name: ");
         String name = scanner.nextLine();
         while (college.findLecturerByName(name) != null) {
@@ -137,12 +138,15 @@ public class Main {
         int degreeChoice = scanner.nextInt();
         scanner.nextLine();
         eDegree degree = eDegree.BA;
-        if (degreeChoice == 2) degree = eDegree.MA;
-        else if (degreeChoice == 3) degree = eDegree.PHD;
-        else if (degreeChoice == 4) degree = eDegree.PROFESSOR;
+        if (degreeChoice == 2)
+            degree = eDegree.MA;
+        else if (degreeChoice == 3)
+            degree = eDegree.PHD;
+        else if (degreeChoice == 4)
+            degree = eDegree.PROFESSOR;
         System.out.println("Enter degree name: ");
         String degreeName = scanner.nextLine();
-        
+
         Lecturer newLecturer = new Lecturer(name, degree, degreeName, 0, null);
         double salary;
         do {
@@ -217,8 +221,10 @@ public class Main {
         System.out.print("Enter department name: ");
         String departmentNameAvg = scanner.nextLine();
         double avg = college.getDepartmentAverageSalary(departmentNameAvg);
-        if (avg == -1) System.out.println("Department not found.");
-        else System.out.printf("Average salaries in department %s: %.2f\n", departmentNameAvg, avg);
+        if (avg == -1)
+            System.out.println("Department not found.");
+        else
+            System.out.printf("Average salaries in department %s: %.2f\n", departmentNameAvg, avg);
     }
 
     public static void showAllLecturersInCollege(College college, Scanner scanner) {
