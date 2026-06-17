@@ -13,9 +13,11 @@ public class Department {
         setLecturersCount(0);
     }
 
-    public boolean addLecturer(Lecturer l) {
+    public void addLecturer(Lecturer l) throws CollegeSystemException {
         for (int i = 0; i < getLecturersCount(); i++) {
-            if (getLecturers()[i] == l) return false;
+            if (getLecturers()[i].equals(l)) {
+                throw new CollegeSystemException("Lecturer already exists in this department.");
+            }
         }
         if (getLecturersCount() == getLecturers().length) {
             expandLecturersArray();
@@ -23,13 +25,12 @@ public class Department {
         getLecturers()[getLecturersCount()] = l;
         setLecturersCount(getLecturersCount() + 1);
         l.setDepartment(this);
-        return true;
     }
 
-    public boolean removeLecturer(Lecturer l) {
+    public void removeLecturer(Lecturer l) throws CollegeSystemException {
         int index = -1;
         for (int i = 0; i < getLecturersCount(); i++) {
-            if (getLecturers()[i] == l) {
+            if (getLecturers()[i].equals(l)) {
                 index = i;
                 break;
             }
@@ -39,9 +40,9 @@ public class Department {
             getLecturers()[index] = getLecturers()[getLecturersCount() - 1];
             getLecturers()[getLecturersCount() - 1] = null;
             setLecturersCount(getLecturersCount() - 1);
-            return true;
+        } else {
+            throw new CollegeSystemException("Lecturer not found in this department.");
         }
-        return false;
     }
 
     private void expandLecturersArray() {
@@ -52,14 +53,14 @@ public class Department {
         setLecturers(newArr);
     }
 
-    public Lecturer[] getLecturers() {return lecturers;}
-    public void setLecturers(Lecturer[] lecturers) {this.lecturers = lecturers;}
-    public int getNumStudents() {return numStudents;}
-    public void setNumStudents(int numStudents) {this.numStudents = numStudents;}
+    public Lecturer[] getLecturers() { return lecturers; }
+    public void setLecturers(Lecturer[] lecturers) { this.lecturers = lecturers; }
+    public int getNumStudents() { return numStudents; }
+    public void setNumStudents(int numStudents) { this.numStudents = numStudents; }
     public String getName() { return name; }
-    public void setName(String name) {this.name = name;}
-    public int getLecturersCount() {return lecturersCount;}
-    public void setLecturersCount(int lecturersCount) {this.lecturersCount = lecturersCount;}
+    public void setName(String name) { this.name = name; }
+    public int getLecturersCount() { return lecturersCount; }
+    public void setLecturersCount(int lecturersCount) { this.lecturersCount = lecturersCount; }
 
     public double getAverageSalary() {
         if (getLecturersCount() == 0) return 0;
@@ -70,6 +71,15 @@ public class Department {
         return sum / getLecturersCount();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Department other = (Department) obj;
+        return this.name.equals(other.name);
+    }
+
+    @Override
     public String toString() {
         return "Department: " + getName() + " | Number of students: " + getNumStudents() + " | Number of lecturers: " + getLecturersCount();
     }
