@@ -18,12 +18,17 @@ public class Lecturer {
         setDegreeType(degreeType);
         setDegreeName(degreeName);
         setSalary(salary);
-        setDepartment(null); // No default department
+        setDepartment(department); 
         setCommittees(new Committee[2]); // Initial size of 2
         setCommitteesCount(0);
     }
 
-    public void addCommittee(Committee c) {
+    public void addCommittee(Committee c) throws CollegeSystemException {
+        for (int i = 0; i < getCommitteesCount(); i++) {
+            if (getCommittees()[i].equals(c)) {
+                throw new CollegeSystemException("Lecturer is already a member of this committee.");
+            }
+        }
         if (getCommitteesCount() == getCommittees().length) {
             expandCommitteesArray();
         }
@@ -31,10 +36,10 @@ public class Lecturer {
         setCommitteesCount(getCommitteesCount() + 1);
     }
 
-    public void removeCommittee(Committee c) {
+    public void removeCommittee(Committee c) throws CollegeSystemException {
         int index = -1;
         for (int i = 0; i < getCommitteesCount(); i++) {
-            if (getCommittees()[i] == c) {
+            if (getCommittees()[i].equals(c)) {
                 index = i;
                 break;
             }
@@ -43,6 +48,8 @@ public class Lecturer {
             getCommittees()[index] = getCommittees()[getCommitteesCount() - 1]; // Override with last element
             getCommittees()[getCommitteesCount() - 1] = null;
             setCommitteesCount(getCommitteesCount() - 1);
+        } else {
+            throw new CollegeSystemException("Lecturer is not a member of this committee.");
         }
     }
 
@@ -61,13 +68,8 @@ public class Lecturer {
     public eDegree getDegreeType() { return this.degreeType; }
     public void setDegreeType(eDegree degreeType) { this.degreeType = degreeType; }
     public double getSalary() { return this.salary; }
-    public boolean setSalary(double salary) {
-        if (salary <= 0)
-            return false;
-        this.salary = salary;
-        return true;
-    }
-    public String getDegreeName() { return this.degreeName;};
+    public void setSalary(double salary) { this.salary = salary; }
+    public String getDegreeName() { return this.degreeName; }
     public void setDegreeName(String degreeName) { this.degreeName = degreeName; }
     public void setDepartment(Department dept) { this.department = dept; }
     public Department getDepartment() { return this.department; }
@@ -86,15 +88,23 @@ public class Lecturer {
         return names;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Lecturer other = (Lecturer) obj;
+        return this.id == other.id;
+    }
+
+    @Override
     public String toString() {
         String string = "Lecturer: " + getName() + " | ID: " + getId() + " | Degree: " + getDegreeType() + " (" + getDegreeName() + ") | Salary: "
                 + getSalary() + " | Department: ";
         if (getDepartment() == null) { string += "No department | ";}
         else {string += getDepartment().getName() + " | ";}
         string += "Member in committees: ";
-        if (getCommitteesNames() == "") { string += "No committees | ";}
+        if (getCommitteesNames().equals("")) { string += "No committees | ";}
         else {string += getCommitteesNames();}
         return string;
     }
-
 }
