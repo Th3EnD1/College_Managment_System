@@ -15,13 +15,14 @@ public class Main {
         String collegeName = scanner.nextLine();
         College college = new College(collegeName);
 
+        // THIS IS SOME TEST DATA WE PUT FOR TESTING PURPOSES, NOT PART OF THE MAIN LOGIC
         setupTestData(college);
+        // END OF TEST DATA
 
         int choice = -1;
 
         while (choice != 0) {
-            System.out.println();
-            System.out.println("--- Staff Management Menu - " + collegeName + " College ---");
+            System.out.println("\n--- Staff Management Menu - " + collegeName + " College ---");
             System.out.println("0- EXIT");
             System.out.println("1- Add lecturer");
             System.out.println("2- Add committee");
@@ -101,6 +102,7 @@ public class Main {
         scanner.close();
     }
 
+    // THIS IS SOME TEST DATA WE PUT FOR TESTING PURPOSES, NOT PART OF THE MAIN LOGIC
     public static void setupTestData(College college) {
         try {
             Doctor doc1 = new Doctor("Dr. Smith", "Computer Science", 15000, null);
@@ -135,11 +137,12 @@ public class Main {
             college.addMemberToCommittee(doc2.getId(), "Curriculum");
             college.addMemberToCommittee(doc3.getId(), "Admissions");
 
-            System.out.println("Test data setup successfully.");
+            System.out.println("\nTest data setup successfully.");
         } catch (CollegeSystemException e) {
-            System.out.println("Error setting up test data: " + e.getMessage());
+            System.out.println("\nError setting up test data: " + e.getMessage());
         }
     }
+    // END OF TEST DATA SETUP
 
     public static void addNewLecturerToCollege(College college, Scanner scanner) throws CollegeSystemException {
         System.out.println("Enter lecturer name: ");
@@ -185,7 +188,7 @@ public class Main {
         } else {
             college.addLecturer(new Lecturer(name, degree, degreeName, salary, null));
         }
-        System.out.println("Lecturer has been added.");
+        System.out.println("\nLecturer " + name + " has been added.");
     }
 
     public static void addNewCommitteeToCollege(College college, Scanner scanner) throws CollegeSystemException {
@@ -194,7 +197,7 @@ public class Main {
         System.out.print("Enter chairman ID (Must be PhD or Professor): ");
         int chairId = scanner.nextInt();
         college.addCommittee(commName, chairId);
-        System.out.println("Committee has been added.");
+        System.out.println("\nCommittee " + commName + " has been added.");
     }
 
     public static void addMemberToCommitteeInCollege(College college, Scanner scanner) throws CollegeSystemException {
@@ -203,7 +206,7 @@ public class Main {
         System.out.print("Enter lecturer's ID: ");
         int lecturerIdAdd = scanner.nextInt();
         college.addMemberToCommittee(lecturerIdAdd, committeeNameAdd);
-        System.out.println("Member added successfully.");
+        System.out.println("\nMember " + college.findLecturerById(lecturerIdAdd).getName() + " has been added to the committee " + committeeNameAdd + ".");
     }
 
     public static void updateCommitteeChairmanInCollege(College college, Scanner scanner) throws CollegeSystemException {
@@ -212,7 +215,7 @@ public class Main {
         System.out.print("Enter new chairman's ID: ");
         int lecturerIdUpdate = scanner.nextInt();
         college.updateCommitteeChairman(committeeNameUpdate, lecturerIdUpdate);
-        System.out.println("Chairman updated successfully.");
+        System.out.println("\nChairman " + college.findCommitteeByName(committeeNameUpdate).getChairman().getName() + " has been updated in the committee " + committeeNameUpdate + ".");
     }
 
     public static void removeMemberFromCommitteeInCollege(College college, Scanner scanner) throws CollegeSystemException {
@@ -221,7 +224,7 @@ public class Main {
         System.out.print("Enter lecturer's ID for removal: ");
         int lecturerIdRemove = scanner.nextInt();
         college.removeMemberFromCommittee(lecturerIdRemove, committeeNameRemove);
-        System.out.println("Lecturer removed from the committee.");
+        System.out.println("\nLecturer " + college.findLecturerById(lecturerIdRemove).getName() + " has been removed from the committee " + committeeNameRemove + ".");
     }
 
     public static void addNewDepartmentToCollege(College college, Scanner scanner) throws CollegeSystemException {
@@ -236,7 +239,7 @@ public class Main {
         scanner.nextLine();
 
         college.addDepartment(new Department(departmentName, maxStudentsNum));
-        System.out.println("Department has been added.");
+        System.out.println("\nDepartment " + departmentName + " has been added.");
     }
 
     public static void addLecturerToDepartmentInCollege(College college, Scanner scanner) throws CollegeSystemException {
@@ -245,14 +248,14 @@ public class Main {
         System.out.print("Enter lecturer ID: ");
         int lecturerIdDepartment = scanner.nextInt();
         college.addLecturerToDepartment(lecturerIdDepartment, departmentName);
-        System.out.println("Lecturer added to the department.");
+        System.out.println("\nLecturer " + college.findLecturerById(lecturerIdDepartment).getName() + " has been added to the department " + departmentName + ".");
     }
 
     public static void cloneCommitteeInCollege(College college, Scanner scanner) throws CollegeSystemException {
         System.out.print("Enter committee name to clone: ");
         String committeeName = scanner.nextLine();
         college.cloneCommittee(committeeName);
-        System.out.println("Committee cloned successfully.");
+        System.out.println("\nCommittee " + committeeName + " has been cloned.");
     }
 
     public static void compareDoctorsByArticles(College college, Scanner scanner) {
