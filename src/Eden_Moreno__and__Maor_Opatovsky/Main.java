@@ -15,6 +15,8 @@ public class Main {
         String collegeName = scanner.nextLine();
         College college = new College(collegeName);
 
+        setupTestData(college);
+
         int choice = -1;
 
         while (choice != 0) {
@@ -97,6 +99,46 @@ public class Main {
         }
 
         scanner.close();
+    }
+
+    public static void setupTestData(College college) {
+        try {
+            Doctor doc1 = new Doctor("Dr. Smith", "Computer Science", 15000, null);
+            doc1.addArticle("Java Basics");
+            Doctor doc2 = new Doctor("Dr. Brown", "Mathematics", 16000, null);
+            doc2.addArticle("Calculus I");
+            Doctor doc3 = new Doctor("Dr. Taylor", "Physics", 15500, null);
+            doc3.addArticle("Quantum Mechanics");
+
+            Professor prof1 = new Professor("Prof. Jones", "Software Engineering", 20000, null, "Tech University");
+            prof1.addArticle("Advanced Design Patterns");
+
+            college.addLecturer(doc1);
+            college.addLecturer(doc2);
+            college.addLecturer(doc3);
+            college.addLecturer(prof1);
+
+            Department csDept = new Department("Computer Science", 500);
+            Department mathDept = new Department("Mathematics", 300);
+
+            college.addDepartment(csDept);
+            college.addDepartment(mathDept);
+
+            college.addLecturerToDepartment(doc1.getId(), "Computer Science");
+            college.addLecturerToDepartment(prof1.getId(), "Computer Science");
+            college.addLecturerToDepartment(doc2.getId(), "Mathematics");
+            college.addLecturerToDepartment(doc3.getId(), "Mathematics");
+
+            college.addCommittee("Curriculum", prof1.getId());
+            college.addCommittee("Admissions", doc1.getId());
+
+            college.addMemberToCommittee(doc2.getId(), "Curriculum");
+            college.addMemberToCommittee(doc3.getId(), "Admissions");
+
+            System.out.println("Test data setup successfully.");
+        } catch (CollegeSystemException e) {
+            System.out.println("Error setting up test data: " + e.getMessage());
+        }
     }
 
     public static void addNewLecturerToCollege(College college, Scanner scanner) throws CollegeSystemException {
@@ -277,12 +319,12 @@ public class Main {
     }
 
     public static void showAllLecturersInCollege(College college, Scanner scanner) {
-        System.out.println("--- All Lecturers ---");
+        System.out.println("\n--- All Lecturers ---");
         System.out.println(college.getAllLecturers());
     }
 
     public static void showAllCommitteesInCollege(College college, Scanner scanner) {
-        System.out.println("--- All Committees ---");
+        System.out.println("\n--- All Committees ---");
         System.out.println(college.getAllCommittees());
     }
 }
