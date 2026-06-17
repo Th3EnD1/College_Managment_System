@@ -84,7 +84,6 @@ public class College {
         if (getCommitteesCount() == getCommittees().length) expandCommittees();
         getCommittees()[getCommitteesCount()] = new Committee(committeeName, (Doctor) chairman);
         setCommitteesCount(getCommitteesCount() + 1);
-        System.out.println("Committee " + committeeName + " has been added.");
     }
 
     public void addDepartment(Department d) throws CollegeSystemException {
@@ -94,7 +93,6 @@ public class College {
         if (getDepartmentsCount() == getDepartments().length) expandDepartments();
         getDepartments()[getDepartmentsCount()] = d;
         setDepartmentsCount(getDepartmentsCount() + 1);
-        System.out.println("Department " + d.getName() + " has been added.");
     }
 
     public void addMemberToCommittee(int lecturerId, String committeeName) throws CollegeSystemException {
@@ -104,7 +102,6 @@ public class College {
         if (c == null) throw new CollegeSystemException("Committee not found.");
 
         c.addMember(l);
-        System.out.println("Member " + l.getName() + " has been added to the committee " + committeeName + ".");
     }
 
     public void updateCommitteeChairman(String committeeName, int newChairmanId) throws CollegeSystemException {
@@ -117,7 +114,6 @@ public class College {
         }
 
         c.setChairman((Doctor) l);
-        System.out.println("Chairman of the committee " + committeeName + " has been updated to " + l.getName() + ".");
     }
 
     public void removeMemberFromCommittee(int lecturerId, String committeeName) throws CollegeSystemException {
@@ -127,7 +123,6 @@ public class College {
         if (c == null) throw new CollegeSystemException("Committee not found.");
 
         c.removeMember(l);
-        System.out.println("Member " + l.getName() + " has been removed from the committee " + committeeName + ".");
     }
 
     public void addLecturerToDepartment(int lecturerId, String deptName) throws CollegeSystemException {
@@ -148,7 +143,6 @@ public class College {
         if (getCommitteesCount() == getCommittees().length) expandCommittees();
         getCommittees()[getCommitteesCount()] = cloned;
         setCommitteesCount(getCommitteesCount() + 1);
-        System.out.println("Committee " + committeeName + " has been cloned.");
     }
 
     public double getCollegeAverageSalary() {
@@ -167,14 +161,14 @@ public class College {
     public String getAllLecturers() {
         if (getLecturersCount() == 0) return "There are no lecturers in the college.";
         String res = "";
-        for (int i = 0; i < getLecturersCount(); i++) res += getLecturers()[i].toString() + "\n";
+        for (int i = 0; i < getLecturersCount(); i++) res += getLecturers()[i].toString() + "\n\n";
         return res;
     }
 
     public String getAllCommittees() {
         if (getCommitteesCount() == 0) return "There are no committees in the college.";
         String res = "";
-        for (int i = 0; i < getCommitteesCount(); i++) res += getCommittees()[i].toString() + "\n";
+        for (int i = 0; i < getCommitteesCount(); i++) res += getCommittees()[i].toString() + "\n\n";
         return res;
     }
 
