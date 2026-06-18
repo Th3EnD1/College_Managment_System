@@ -113,14 +113,14 @@ public class Main {
     // THIS IS SOME TEST DATA WE PUT FOR TESTING PURPOSES, NOT PART OF THE MAIN LOGIC
     public static void setupTestData(College college) {
         try {
-            Doctor doc1 = new Doctor("Dr. Smith", "Computer Science", 15000, null);
+            Doctor doc1 = new Doctor("Dr. Cohen", "Computer Science", 15000, null);
             doc1.addArticle("Java Basics");
-            Doctor doc2 = new Doctor("Dr. Brown", "Mathematics", 16000, null);
+            Doctor doc2 = new Doctor("Dr. Levi", "Mathematics", 16000, null);
             doc2.addArticle("Calculus I");
-            Doctor doc3 = new Doctor("Dr. Taylor", "Physics", 15500, null);
+            Doctor doc3 = new Doctor("Dr. Ben-David", "Physics", 15500, null);
             doc3.addArticle("Quantum Mechanics");
 
-            Professor prof1 = new Professor("Prof. Jones", "Software Engineering", 20000, null, "Tech University");
+            Professor prof1 = new Professor("Prof. Goldstein", "Software Engineering", 20000, null, "Afeka College of Engineering");
             prof1.addArticle("Advanced Design Patterns");
 
             college.addLecturer(doc1);
@@ -156,7 +156,6 @@ public class Main {
         System.out.println("Enter lecturer name: ");
         String name = scanner.nextLine();
         while (college.findLecturerByName(name) != null) {
-            // Use println instead of print with \n for cleaner UI formatting
             System.out.println("A lecturer with this name already exists. Please enter a different name: ");
             name = scanner.nextLine();
         }
