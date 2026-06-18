@@ -40,8 +40,13 @@ public class Main {
             System.out.println("14- Clone a committee");
             System.out.print("Select an option: ");
 
-            choice = scanner.nextInt();
-            scanner.nextLine();
+            // Parse integer from string input to prevent InputMismatchException
+            try {
+                choice = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input: Please enter a numeric value.");
+                continue;
+            }
 
             try {
                 switch (choice) {
@@ -96,6 +101,9 @@ public class Main {
                 }
             } catch (CollegeSystemException e) {
                 System.out.println("Action Failed: " + e.getMessage());
+            } catch (Exception e) {
+                // Catch any other unexpected exceptions to prevent the application from crashing
+                System.out.println("An unexpected error occurred: " + e.getMessage());
             }
         }
 
@@ -148,12 +156,18 @@ public class Main {
         System.out.println("Enter lecturer name: ");
         String name = scanner.nextLine();
         while (college.findLecturerByName(name) != null) {
-            System.out.print("A lecturer with this name already exists. Please enter a different name: \n");
+            // Use println instead of print with \n for cleaner UI formatting
+            System.out.println("A lecturer with this name already exists. Please enter a different name: ");
             name = scanner.nextLine();
         }
         System.out.print("Degree Type (1-BA, 2-MA, 3-PHD, 4-PROFESSOR): ");
-        int degreeChoice = scanner.nextInt();
-        scanner.nextLine();
+        // Parse integer directly to handle non-numeric inputs without crashing
+        int degreeChoice;
+        try {
+            degreeChoice = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            throw new CollegeSystemException("Invalid input: Expected a numeric value for degree type.");
+        }
         
         eDegree degree = eDegree.BA;
         if (degreeChoice == 2) degree = eDegree.MA;
@@ -163,8 +177,13 @@ public class Main {
         System.out.println("Enter degree name: ");
         String degreeName = scanner.nextLine();
         System.out.println("Enter salary: ");
-        double salary = scanner.nextDouble();
-        scanner.nextLine();
+        // Parse double directly to handle non-numeric inputs without crashing
+        double salary;
+        try {
+            salary = Double.parseDouble(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            throw new CollegeSystemException("Invalid input: Expected a numeric value for salary.");
+        }
 
         if (degree == eDegree.PHD || degree == eDegree.PROFESSOR) {
             Doctor doctor;
@@ -177,8 +196,13 @@ public class Main {
             }
             
             System.out.print("How many articles do you want to add now? ");
-            int numArticles = scanner.nextInt();
-            scanner.nextLine();
+            // Parse integer to prevent InputMismatchException
+            int numArticles;
+            try {
+                numArticles = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                throw new CollegeSystemException("Invalid input: Expected a numeric value for number of articles.");
+            }
             for (int i = 0; i < numArticles; i++) {
                 System.out.print("Enter article name: ");
                 String articleName = scanner.nextLine();
@@ -195,7 +219,13 @@ public class Main {
         System.out.print("Enter committee name: ");
         String commName = scanner.nextLine();
         System.out.print("Enter chairman ID (Must be PhD or Professor): ");
-        int chairId = scanner.nextInt();
+        // Safe input handling for integer to prevent scanner bugs
+        int chairId;
+        try {
+            chairId = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            throw new CollegeSystemException("Invalid input: Expected a numeric value for chairman ID.");
+        }
         college.addCommittee(commName, chairId);
         System.out.println("\nCommittee " + commName + " has been added.");
     }
@@ -204,7 +234,13 @@ public class Main {
         System.out.print("Enter committee name: ");
         String committeeNameAdd = scanner.nextLine();
         System.out.print("Enter lecturer's ID: ");
-        int lecturerIdAdd = scanner.nextInt();
+        // Robust integer parsing to avoid crashes
+        int lecturerIdAdd;
+        try {
+            lecturerIdAdd = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            throw new CollegeSystemException("Invalid input: Expected a numeric value for lecturer ID.");
+        }
         college.addMemberToCommittee(lecturerIdAdd, committeeNameAdd);
         System.out.println("\nMember " + college.findLecturerById(lecturerIdAdd).getName() + " has been added to the committee " + committeeNameAdd + ".");
     }
@@ -213,7 +249,13 @@ public class Main {
         System.out.print("Enter committee name: ");
         String committeeNameUpdate = scanner.nextLine();
         System.out.print("Enter new chairman's ID: ");
-        int lecturerIdUpdate = scanner.nextInt();
+        // Robust input parsing
+        int lecturerIdUpdate;
+        try {
+            lecturerIdUpdate = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            throw new CollegeSystemException("Invalid input: Expected a numeric value for chairman ID.");
+        }
         college.updateCommitteeChairman(committeeNameUpdate, lecturerIdUpdate);
         System.out.println("\nChairman " + college.findCommitteeByName(committeeNameUpdate).getChairman().getName() + " has been updated in the committee " + committeeNameUpdate + ".");
     }
@@ -222,7 +264,13 @@ public class Main {
         System.out.print("Enter committee name: ");
         String committeeNameRemove = scanner.nextLine();
         System.out.print("Enter lecturer's ID for removal: ");
-        int lecturerIdRemove = scanner.nextInt();
+        // Input validation with parseInt
+        int lecturerIdRemove;
+        try {
+            lecturerIdRemove = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            throw new CollegeSystemException("Invalid input: Expected a numeric value for lecturer ID.");
+        }
         college.removeMemberFromCommittee(lecturerIdRemove, committeeNameRemove);
         System.out.println("\nLecturer " + college.findLecturerById(lecturerIdRemove).getName() + " has been removed from the committee " + committeeNameRemove + ".");
     }
@@ -235,8 +283,13 @@ public class Main {
             departmentName = scanner.nextLine();
         }
         System.out.print("Enter a maximum number for students in the department: ");
-        int maxStudentsNum = scanner.nextInt();
-        scanner.nextLine();
+        // Parse integer to prevent exceptions on invalid input
+        int maxStudentsNum;
+        try {
+            maxStudentsNum = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            throw new CollegeSystemException("Invalid input: Expected a numeric value for maximum students.");
+        }
 
         college.addDepartment(new Department(departmentName, maxStudentsNum));
         System.out.println("\nDepartment " + departmentName + " has been added.");
@@ -246,7 +299,13 @@ public class Main {
         System.out.print("Enter department name: ");
         String departmentName = scanner.nextLine();
         System.out.print("Enter lecturer ID: ");
-        int lecturerIdDepartment = scanner.nextInt();
+        // Safely parse int from string
+        int lecturerIdDepartment;
+        try {
+            lecturerIdDepartment = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            throw new CollegeSystemException("Invalid input: Expected a numeric value for lecturer ID.");
+        }
         college.addLecturerToDepartment(lecturerIdDepartment, departmentName);
         System.out.println("\nLecturer " + college.findLecturerById(lecturerIdDepartment).getName() + " has been added to the department " + departmentName + ".");
     }
@@ -260,10 +319,22 @@ public class Main {
 
     public static void compareDoctorsByArticles(College college, Scanner scanner) {
         System.out.print("Enter first Doctor/Professor ID: ");
-        int id1 = scanner.nextInt();
+        // Input mismatch prevention using try-catch for parseInt
+        int id1;
+        try {
+            id1 = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input: Expected a numeric value for ID.");
+            return;
+        }
         System.out.print("Enter second Doctor/Professor ID: ");
-        int id2 = scanner.nextInt();
-        scanner.nextLine();
+        int id2;
+        try {
+            id2 = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input: Expected a numeric value for ID.");
+            return;
+        }
 
         Lecturer l1 = college.findLecturerById(id1);
         Lecturer l2 = college.findLecturerById(id2);
@@ -295,13 +366,19 @@ public class Main {
         }
 
         System.out.println("Compare by: 1- Total members count, 2- Total articles count");
-        int crit = scanner.nextInt();
-        scanner.nextLine();
+        // Safe input handling
+        int criteria;
+        try {
+            criteria = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input: Expected a numeric value for criteria.");
+            return;
+        }
 
         int result = 0;
-        if (crit == 1) {
+        if (criteria == 1) {
             result = new CommitteeMemberComparator().compare(c1, c2);
-        } else if (crit == 2) {
+        } else if (criteria == 2) {
             result = new CommitteeArticleComparator().compare(c1, c2);
         } else {
             System.out.println("Invalid selection.");
