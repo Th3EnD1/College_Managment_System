@@ -1,59 +1,52 @@
 package Eden_Moreno__and__Maor_Opatovsky;
 
-public class Committee implements Cloneable {
-    private String name;
-    private Lecturer[] members;
-    private Doctor chairman;
-    private int membersCount;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-    public Committee(String name, Doctor chairman) throws CollegeSystemException{
+public class Committee implements Cloneable, Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private String name;
+    private ArrayList<Lecturer> members;
+    private Doctor chairman;
+    private eCommitteeType type;
+
+    public Committee(String name, Doctor chairman, eCommitteeType type) throws CollegeSystemException {
         setName(name);
         setChairman(chairman);
-        setMembersCount(0);
-        setMembers(new Lecturer[2]);
+        setType(type);
+        setMembers(new ArrayList<>());
     }
 
     public void addMember(Lecturer l) throws CollegeSystemException {
         if (l.equals(getChairman())) {
             throw new CollegeSystemException("Lecturer is the chairman and cannot be added as a regular member.");
         }
-        for (int i = 0; i < getMembersCount(); i++) {
-            if (getMembers()[i].equals(l)) {
-                throw new CollegeSystemException("Lecturer is already a member of this committee.");
-            }
+        if (getMembers().contains(l)) {
+            throw new CollegeSystemException("Lecturer is already a member of this committee.");
         }
-        if (getMembersCount() == getMembers().length) {
-            expandMembersArray();
+
+        // Enforce homogeneous degrees based on the committee type
+        if (getType() == eCommitteeType.REGULAR && (l.getDegreeType() == eDegree.PHD || l.getDegreeType() == eDegree.PROFESSOR)) {
+            throw new CollegeSystemException("This committee only accepts Regular (BA/MA) degrees.");
         }
-        getMembers()[getMembersCount()] = l;
-        setMembersCount(getMembersCount() + 1);
+        if (getType() == eCommitteeType.DOCTOR && l.getDegreeType() != eDegree.PHD) {
+            throw new CollegeSystemException("This committee only accepts Doctor (PHD) degrees.");
+        }
+        if (getType() == eCommitteeType.PROFESSOR && l.getDegreeType() != eDegree.PROFESSOR) {
+            throw new CollegeSystemException("This committee only accepts Professor degrees.");
+        }
+
+        members.add(l);
         l.addCommittee(this);
     }
 
     public void removeMember(Lecturer l) throws CollegeSystemException {
-        int index = -1;
-        for (int i = 0; i < getMembersCount(); i++) {
-            if (getMembers()[i].equals(l)) {
-                index = i;
-                break;
-            }
-        }
-        if (index != -1) {
+        if (members.remove(l)) {
             l.removeCommittee(this);
-            getMembers()[index] = getMembers()[getMembersCount() - 1];
-            getMembers()[getMembersCount() - 1] = null;
-            setMembersCount(getMembersCount() - 1);
         } else {
             throw new CollegeSystemException("Lecturer is not a member of this committee.");
         }
-    }
-
-    private void expandMembersArray() {
-        Lecturer[] newArr = new Lecturer[getMembers().length * 2];
-        for (int i = 0; i < getMembersCount(); i++) {
-            newArr[i] = getMembers()[i];
-        }
-        setMembers(newArr);
     }
 
     public void setChairman(Doctor newChairman) throws CollegeSystemException {
@@ -69,20 +62,19 @@ public class Committee implements Cloneable {
     @Override
     public Committee clone() {
         try {
-            Committee cloned = (Committee) super.clone();
-            cloned.setName(this.getName() + "-new");
-            cloned.setMembers(new Lecturer[this.getMembers().length]);
-            cloned.setMembersCount(0);
+            Committee clonedCommittee = (Committee) super.clone();
+            clonedCommittee.setName(this.getName() + "-new");
+            clonedCommittee.setMembers(new ArrayList<>());
             
             // Add the same members
-            for (int i = 0; i < this.getMembersCount(); i++) {
+            for (Lecturer l : this.getMembers()) {
                 try {
-                    cloned.addMember(this.getMembers()[i]);
+                    clonedCommittee.addMember(l);
                 } catch (CollegeSystemException e) {
-                    // Ignore, logically shouldn't happen here
+                    // Logically shouldn't happen here as members are valid
                 }
             }
-            return cloned;
+            return clonedCommittee;
         } catch (CloneNotSupportedException e) {
             return null;
         }
@@ -91,26 +83,26 @@ public class Committee implements Cloneable {
     public String getName() { return this.name; }
     public void setName(String name) { this.name = name; }
     public Doctor getChairman() { return this.chairman; }
-    public int getMembersCount() { return this.membersCount; }
-    public void setMembersCount(int membersCount) { this.membersCount = membersCount; }
-    public Lecturer[] getMembers() { return this.members; }
-    public void setMembers(Lecturer[] members) { this.members = members; }
+    public eCommitteeType getType() { return this.type; }
+    public void setType(eCommitteeType type) { this.type = type; }
+    public ArrayList<Lecturer> getMembers() { return this.members; }
+    public void setMembers(ArrayList<Lecturer> members) { this.members = members; }
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Committee other = (Committee) obj;
-        return this.name.equals(other.name);
+        return this.getName().equals(other.getName());
     }
 
     @Override
     public String toString() {
-        String res = "Committee: " + name + " | Chairman: " + chairman.getName() + " | Number of members: " + getMembersCount();
-        if (getMembersCount() > 0) {
+        String res = "Committee: " + this.getName() + " (Type: " + this.getType() + ") | Chairman: " + this.getChairman().getName() + " | Number of members: " + this.getMembers().size();
+        if (!this.getMembers().isEmpty()) {
             res += "\n  Committee members: ";
-            for (int i = 0; i < getMembersCount(); i++) {
-                res += getMembers()[i].getName() + (i < getMembersCount() - 1 ? ", " : "");
+            for (int i = 0; i < this.getMembers().size(); i++) {
+                res += this.getMembers().get(i).getName() + (i < this.getMembers().size() - 1 ? ", " : "");
             }
         }
         return res;
