@@ -1,74 +1,51 @@
 package Eden_Moreno__and__Maor_Opatovsky;
 
-public class Department {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class Department implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private String name;
     private int numStudents;
-    private Lecturer[] lecturers;
-    private int lecturersCount;
+    private ArrayList<Lecturer> lecturers;
 
     public Department(String name, int numStudents) {
         setName(name);
         setNumStudents(numStudents);
-        setLecturers(new Lecturer[2]);
-        setLecturersCount(0);
+        setLecturers(new ArrayList<>());
     }
 
     public void addLecturer(Lecturer l) throws CollegeSystemException {
-        for (int i = 0; i < getLecturersCount(); i++) {
-            if (getLecturers()[i].equals(l)) {
-                throw new CollegeSystemException("Lecturer already exists in this department.");
-            }
+        if (getLecturers().contains(l)) {
+            throw new CollegeSystemException("Lecturer already exists in this department.");
         }
-        if (getLecturersCount() == getLecturers().length) {
-            expandLecturersArray();
-        }
-        getLecturers()[getLecturersCount()] = l;
-        setLecturersCount(getLecturersCount() + 1);
+        getLecturers().add(l);
         l.setDepartment(this);
     }
 
     public void removeLecturer(Lecturer l) throws CollegeSystemException {
-        int index = -1;
-        for (int i = 0; i < getLecturersCount(); i++) {
-            if (getLecturers()[i].equals(l)) {
-                index = i;
-                break;
-            }
-        }
-        if (index != -1) {
+        if (getLecturers().remove(l)) {
             l.setDepartment(null);
-            getLecturers()[index] = getLecturers()[getLecturersCount() - 1];
-            getLecturers()[getLecturersCount() - 1] = null;
-            setLecturersCount(getLecturersCount() - 1);
         } else {
             throw new CollegeSystemException("Lecturer not found in this department.");
         }
     }
 
-    private void expandLecturersArray() {
-        Lecturer[] newArr = new Lecturer[getLecturers().length * 2];
-        for (int i = 0; i < getLecturersCount(); i++) {
-            newArr[i] = getLecturers()[i];
-        }
-        setLecturers(newArr);
-    }
-
-    public Lecturer[] getLecturers() { return lecturers; }
-    public void setLecturers(Lecturer[] lecturers) { this.lecturers = lecturers; }
-    public int getNumStudents() { return numStudents; }
+    public ArrayList<Lecturer> getLecturers() { return this.lecturers; }
+    public void setLecturers(ArrayList<Lecturer> lecturers) { this.lecturers = lecturers; }
+    public int getNumStudents() { return this.numStudents; }
     public void setNumStudents(int numStudents) { this.numStudents = numStudents; }
-    public String getName() { return name; }
+    public String getName() { return this.name; }
     public void setName(String name) { this.name = name; }
-    public int getLecturersCount() { return lecturersCount; }
-    public void setLecturersCount(int lecturersCount) { this.lecturersCount = lecturersCount; }
 
     public double getAverageSalary() {
-        if (getLecturersCount() == 0) return 0;
+        if (getLecturers().isEmpty()) return 0;
         double sum = 0;
-        for (int i = 0; i < getLecturersCount(); i++) {
-            sum += getLecturers()[i].getSalary();
+        for (Lecturer l : getLecturers()) {
+            sum += l.getSalary();
         }
-        return sum / getLecturersCount();
+        return sum / getLecturers().size();
     }
 
     @Override
@@ -81,6 +58,6 @@ public class Department {
 
     @Override
     public String toString() {
-        return "Department: " + getName() + " | Number of students: " + getNumStudents() + " | Number of lecturers: " + getLecturersCount();
+        return "Department: " + getName() + " | Number of students: " + getNumStudents() + " | Number of lecturers: " + getLecturers().size();
     }
 }
