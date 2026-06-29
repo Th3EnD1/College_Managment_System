@@ -26,14 +26,14 @@ public class Lecturer implements Serializable {
     }
 
     public void addCommittee(Committee c) throws CollegeSystemException {
-        if (this.getCommittees().contains(c)) {
+        if (getCommittees().contains(c)) {
             throw new CollegeSystemException("Lecturer is already a member of this committee.");
         }
-        this.getCommittees().add(c);
+        getCommittees().add(c);
     }
 
     public void removeCommittee(Committee c) throws CollegeSystemException {
-        if (!this.getCommittees().remove(c)) {
+        if (!getCommittees().remove(c)) {
             throw new CollegeSystemException("Lecturer is not a member of this committee.");
         }
     }
@@ -54,11 +54,11 @@ public class Lecturer implements Serializable {
     public void setCommittees(ArrayList<Committee> committees) { this.committees = committees; }
 
     public String getCommitteesNames() {
-        if (this.getCommittees().isEmpty()) return "No committees";
+        if (getCommittees().isEmpty()) return "No committees";
         StringBuilder names = new StringBuilder();
-        for (int i = 0; i < this.getCommittees().size(); i++) {
-            names.append(this.getCommittees().get(i).getName());
-            if (i < this.getCommittees().size() - 1) names.append(", ");
+        for (int i = 0; i < getCommittees().size(); i++) {
+            names.append(getCommittees().get(i).getName());
+            if (i < getCommittees().size() - 1) names.append(", ");
         }
         return names.toString();
     }
@@ -68,7 +68,7 @@ public class Lecturer implements Serializable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Lecturer other = (Lecturer) obj;
-        return this.getId() == other.getId();
+        return getId() == other.getId();
     }
 
     @Override
