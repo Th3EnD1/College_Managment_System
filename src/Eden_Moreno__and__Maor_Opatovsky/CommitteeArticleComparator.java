@@ -15,9 +15,9 @@ public class CommitteeArticleComparator implements Comparator<Committee> {
             sum += c.getChairman().getArticlesCount();
         }
         // Include regular members (if they are Doctors)
-        for (int i = 0; i < c.getMembersCount(); i++) {
-            if (c.getMembers()[i] instanceof Doctor) {
-                sum += ((Doctor) c.getMembers()[i]).getArticlesCount();
+        for (Lecturer l : c.getMembers()) {
+            if (l instanceof Doctor) {
+                sum += ((Doctor) l).getArticlesCount();
             }
         }
         return sum;
