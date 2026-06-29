@@ -1,62 +1,56 @@
 package Eden_Moreno__and__Maor_Opatovsky;
 
-public class College {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class College implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private String name;
-    private Lecturer[] lecturers;
-    private int lecturersCount;
-    private Department[] departments;
-    private int departmentsCount;
-    private Committee[] committees;
-    private int committeesCount;
+    private ArrayList<Lecturer> lecturers;
+    private ArrayList<Department> departments;
+    private ArrayList<Committee> committees;
 
     public College(String name) {
         setName(name);
-        setLecturers(new Lecturer[2]);
-        setCommitteesCount(0);
-        setCommittees(new Committee[2]);
-        setDepartmentsCount(0);
-        setDepartments(new Department[2]);
+        setLecturers(new ArrayList<>());
+        setDepartments(new ArrayList<>());
+        setCommittees(new ArrayList<>());
     }
 
-    public int getCommitteesCount() { return this.committeesCount; }
-    public void setCommitteesCount(int committeesCount) { this.committeesCount = committeesCount; }
-    public Committee[] getCommittees() { return this.committees; }
-    public void setCommittees(Committee[] committees) { this.committees = committees; }
-    public int getDepartmentsCount() { return this.departmentsCount; }
-    public void setDepartmentsCount(int departmentsCount) { this.departmentsCount = departmentsCount; }
-    public Department[] getDepartments() { return this.departments; }
-    public void setDepartments(Department[] departments) { this.departments = departments; }
-    public int getLecturersCount() { return this.lecturersCount; }
-    public void setLecturersCount(int lecturersCount) { this.lecturersCount = lecturersCount; }
-    public Lecturer[] getLecturers() { return this.lecturers; }
-    public void setLecturers(Lecturer[] lecturers) { this.lecturers = lecturers; }
+    public ArrayList<Committee> getCommittees() { return this.committees; }
+    public void setCommittees(ArrayList<Committee> committees) { this.committees = committees; }
+    public ArrayList<Department> getDepartments() { return this.departments; }
+    public void setDepartments(ArrayList<Department> departments) { this.departments = departments; }
+    public ArrayList<Lecturer> getLecturers() { return this.lecturers; }
+    public void setLecturers(ArrayList<Lecturer> lecturers) { this.lecturers = lecturers; }
     public String getName() { return this.name; }
     public void setName(String name) { this.name = name; }
 
     public Lecturer findLecturerById(int id) {
-        for (int i = 0; i < getLecturersCount(); i++) {
-            if (getLecturers()[i].getId() == id) return getLecturers()[i];
+        for (Lecturer l : getLecturers()) {
+            if (l.getId() == id) return l;
         }
         return null;
     }
 
     public Lecturer findLecturerByName(String name) {
-        for (int i = 0; i < getLecturersCount(); i++) {
-            if (getLecturers()[i].getName().equals(name)) return getLecturers()[i];
+        for (Lecturer l : getLecturers()) {
+            if (l.getName().equals(name)) return l;
         }
         return null;
     }
 
     public Committee findCommitteeByName(String name) {
-        for (int i = 0; i < getCommitteesCount(); i++) {
-            if (getCommittees()[i].getName().equals(name)) return getCommittees()[i];
+        for (Committee c : getCommittees()) {
+            if (c.getName().equals(name)) return c;
         }
         return null;
     }
 
     public Department findDepartmentByName(String name) {
-        for (int i = 0; i < getDepartmentsCount(); i++) {
-            if (getDepartments()[i].getName().equals(name)) return getDepartments()[i];
+        for (Department d : getDepartments()) {
+            if (d.getName().equals(name)) return d;
         }
         return null;
     }
@@ -65,12 +59,10 @@ public class College {
         if (findLecturerById(l.getId()) != null) {
             throw new CollegeSystemException("Lecturer ID already exists.");
         }
-        if (getLecturersCount() == getLecturers().length) expandLecturers();
-        getLecturers()[getLecturersCount()] = l;
-        setLecturersCount(getLecturersCount() + 1);
+        getLecturers().add(l);
     }
 
-    public void addCommittee(String committeeName, int chairmanId) throws CollegeSystemException {
+    public void addCommittee(String committeeName, int chairmanId, eCommitteeType type) throws CollegeSystemException {
         if (findCommitteeByName(committeeName) != null) {
             throw new CollegeSystemException("Committee name already exists.");
         }
@@ -81,18 +73,14 @@ public class College {
         if (!(chairman instanceof Doctor)) {
             throw new CollegeSystemException("Chairman of the committee must be a PhD or Professor.");
         }
-        if (getCommitteesCount() == getCommittees().length) expandCommittees();
-        getCommittees()[getCommitteesCount()] = new Committee(committeeName, (Doctor) chairman);
-        setCommitteesCount(getCommitteesCount() + 1);
+        getCommittees().add(new Committee(committeeName, (Doctor) chairman, type));
     }
 
     public void addDepartment(Department d) throws CollegeSystemException {
         if (findDepartmentByName(d.getName()) != null) {
             throw new CollegeSystemException("Department name already exists.");
         }
-        if (getDepartmentsCount() == getDepartments().length) expandDepartments();
-        getDepartments()[getDepartmentsCount()] = d;
-        setDepartmentsCount(getDepartmentsCount() + 1);
+        getDepartments().add(d);
     }
 
     public void addMemberToCommittee(int lecturerId, String committeeName) throws CollegeSystemException {
@@ -140,16 +128,16 @@ public class College {
         Committee cloned = c.clone();
         if (cloned == null) throw new CollegeSystemException("Failed to clone committee.");
         
-        if (getCommitteesCount() == getCommittees().length) expandCommittees();
-        getCommittees()[getCommitteesCount()] = cloned;
-        setCommitteesCount(getCommitteesCount() + 1);
+        getCommittees().add(cloned);
     }
 
     public double getCollegeAverageSalary() {
-        if (getLecturersCount() == 0) return 0;
+        if (getLecturers().isEmpty()) return 0;
         double sum = 0;
-        for (int i = 0; i < getLecturersCount(); i++) sum += getLecturers()[i].getSalary();
-        return sum / getLecturersCount();
+        for (Lecturer l : getLecturers()) {
+            sum += l.getSalary();
+        }
+        return sum / getLecturers().size();
     }
 
     public double getDepartmentAverageSalary(String deptName) {
@@ -159,35 +147,21 @@ public class College {
     }
 
     public String getAllLecturers() {
-        if (getLecturersCount() == 0) return "There are no lecturers in the college.";
-        String res = "";
-        for (int i = 0; i < getLecturersCount(); i++) res += getLecturers()[i].toString() + "\n\n";
-        return res;
+        if (getLecturers().isEmpty()) return "There are no lecturers in the college.";
+        StringBuilder res = new StringBuilder();
+        for (Lecturer l : getLecturers()) {
+            res.append(l.toString()).append("\n\n");
+        }
+        return res.toString();
     }
 
     public String getAllCommittees() {
-        if (getCommitteesCount() == 0) return "There are no committees in the college.";
-        String res = "";
-        for (int i = 0; i < getCommitteesCount(); i++) res += getCommittees()[i].toString() + "\n\n";
-        return res;
-    }
-
-    private void expandLecturers() {
-        Lecturer[] newArr = new Lecturer[getLecturers().length * 2];
-        for (int i = 0; i < getLecturersCount(); i++) newArr[i] = getLecturers()[i];
-        setLecturers(newArr);
-    }
-
-    private void expandDepartments() {
-        Department[] newArr = new Department[getDepartments().length * 2];
-        for (int i = 0; i < getDepartmentsCount(); i++) newArr[i] = getDepartments()[i];
-        setDepartments(newArr);
-    }
-
-    private void expandCommittees() {
-        Committee[] newArr = new Committee[getCommittees().length * 2];
-        for (int i = 0; i < getCommitteesCount(); i++) newArr[i] = getCommittees()[i];
-        setCommittees(newArr);
+        if (getCommittees().isEmpty()) return "There are no committees in the college.";
+        StringBuilder res = new StringBuilder();
+        for (Committee c : getCommittees()) {
+            res.append(c.toString()).append("\n\n");
+        }
+        return res.toString();
     }
 
     @Override
@@ -195,12 +169,12 @@ public class College {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         College other = (College) obj;
-        return this.name.equals(other.name);
+        return getName().equals(other.getName());
     }
 
     @Override
     public String toString() {
-        return "College name: " + getName() + " | Number of lecturers: " + getLecturersCount() + " | "
-                + "Number of departments: " + getDepartmentsCount() + " | Number of committees: " + getCommitteesCount();
+        return "College name: " + getName() + " | Number of lecturers: " + getLecturers().size() + " | "
+                + "Number of departments: " + getDepartments().size() + " | Number of committees: " + getCommittees().size();
     }
 }
