@@ -37,12 +37,13 @@ public class Committee implements Cloneable, Serializable {
             throw new CollegeSystemException("This committee only accepts Professor degrees.");
         }
 
-        members.add(l);
+        getMembers().add(l);
         l.addCommittee(this);
     }
 
     public void removeMember(Lecturer l) throws CollegeSystemException {
-        if (members.remove(l)) {
+        if (getMembers() == null) throw new CollegeSystemException("The committee is empty.");
+        if (getMembers().remove(l)) {
             l.removeCommittee(this);
         } else {
             throw new CollegeSystemException("Lecturer is not a member of this committee.");
@@ -67,7 +68,7 @@ public class Committee implements Cloneable, Serializable {
             clonedCommittee.setMembers(new ArrayList<>());
             
             // Add the same members
-            for (Lecturer l : this.getMembers()) {
+            for (Lecturer l : getMembers()) {
                 try {
                     clonedCommittee.addMember(l);
                 } catch (CollegeSystemException e) {
@@ -93,16 +94,16 @@ public class Committee implements Cloneable, Serializable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Committee other = (Committee) obj;
-        return this.getName().equals(other.getName());
+        return getName().equals(other.getName());
     }
 
     @Override
     public String toString() {
-        String res = "Committee: " + this.getName() + " (Type: " + this.getType() + ") | Chairman: " + this.getChairman().getName() + " | Number of members: " + this.getMembers().size();
-        if (!this.getMembers().isEmpty()) {
+        String res = "Committee: " + getName() + " (Type: " + getType() + ") | Chairman: " + getChairman().getName() + " | Number of members: " + getMembers().size();
+        if (!getMembers().isEmpty()) {
             res += "\n  Committee members: ";
-            for (int i = 0; i < this.getMembers().size(); i++) {
-                res += this.getMembers().get(i).getName() + (i < this.getMembers().size() - 1 ? ", " : "");
+            for (int i = 0; i < getMembers().size(); i++) {
+                res += getMembers().get(i).getName() + (i < getMembers().size() - 1 ? ", " : "");
             }
         }
         return res;
