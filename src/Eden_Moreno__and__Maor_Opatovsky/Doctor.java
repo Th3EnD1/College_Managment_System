@@ -1,44 +1,36 @@
 package Eden_Moreno__and__Maor_Opatovsky;
 
-public class Doctor extends Lecturer implements Comparable<Doctor> {
-    private String[] articles;
-    private int articlesCount;
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class Doctor extends Lecturer implements Comparable<Doctor>, Serializable {
+    private static final long serialVersionUID = 1L;
+    
+    private ArrayList<String> articles;
 
     public Doctor(String name, String degreeName, double salary, Department department) {
         super(name, eDegree.PHD, degreeName, salary, department);
-        this.articles = new String[2];
-        articlesCount = 0;
+        setArticles(new ArrayList<>());
     }
+
+    public int getArticlesCount() { return articles.size(); }
+    public ArrayList<String> getArticles() { return this.articles; }
+    public void setArticles(ArrayList<String> articles) { this.articles = articles; }
 
     public void addArticle(String articleName) {
-        if (articlesCount == articles.length) {
-            expandArticlesArray();
-        }
-        articles[articlesCount++] = articleName;
-    }
-
-    private void expandArticlesArray() {
-        String[] newArr = new String[articles.length * 2];
-        for (int i = 0; i < articlesCount; i++) {
-            newArr[i] = articles[i];
-        }
-        articles = newArr;
-    }
-
-    public int getArticlesCount() {
-        return this.articlesCount;
+        getArticles().add(articleName);
     }
 
     @Override
     public int compareTo(Doctor other) {
-        return Integer.compare(this.articlesCount, other.articlesCount);
+        return Integer.compare(getArticles().size(), other.getArticles().size());
     }
 
     @Override
     public boolean equals(Object obj) {
         if (!super.equals(obj)) return false;
         Doctor other = (Doctor) obj;
-        return this.articlesCount == other.articlesCount;
+        return getArticles().size() == other.getArticles().size();
     }
 
     @Override
