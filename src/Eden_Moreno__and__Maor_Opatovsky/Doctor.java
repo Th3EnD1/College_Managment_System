@@ -1,9 +1,8 @@
 package Eden_Moreno__and__Maor_Opatovsky;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Doctor extends Lecturer implements Comparable<Doctor>, Serializable {
+public class Doctor extends Lecturer implements Comparable<Doctor> {
     private static final long serialVersionUID = 1L;
     
     private ArrayList<String> articles;

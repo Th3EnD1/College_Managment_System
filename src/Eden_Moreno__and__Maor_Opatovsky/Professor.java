@@ -1,8 +1,6 @@
 package Eden_Moreno__and__Maor_Opatovsky;
 
-import java.io.Serializable;
-
-public class Professor extends Doctor implements Serializable {
+public class Professor extends Doctor {
     private static final long serialVersionUID = 1L;
     
     private String awardingBody;
