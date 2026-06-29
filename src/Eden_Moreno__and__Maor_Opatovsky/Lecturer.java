@@ -37,7 +37,7 @@ public class Lecturer implements Serializable {
             throw new CollegeSystemException("Lecturer is not a member of this committee.");
         }
     }
-
+    public static void setCounter(int val) { counter = val; }
     public int getId() { return this.id; }
     public void setId(int id) { this.id = id; }
     public String getName() { return this.name; }
