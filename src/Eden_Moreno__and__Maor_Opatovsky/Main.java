@@ -1,5 +1,6 @@
 package Eden_Moreno__and__Maor_Opatovsky;
 
+import java.io.*;
 import java.util.Scanner;
 
 /*
@@ -8,22 +9,35 @@ import java.util.Scanner;
  */
 
 public class Main {
+    private static final String DATA_FILE = "college_data.dat";
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        College college = loadCollegeData();
 
-        System.out.print("Enter College Name: ");
-        String collegeName = scanner.nextLine();
-        College college = new College(collegeName);
-
-        // THIS IS SOME TEST DATA WE PUT FOR TESTING PURPOSES, NOT PART OF THE MAIN LOGIC
-        setupTestData(college);
-        // END OF TEST DATA
+        if (college == null) {
+            System.out.print("Enter College Name: ");
+            String collegeName = scanner.nextLine();
+            college = new College(collegeName);
+            // Setup test data only if starting fresh
+            setupTestData(college);
+        } else {
+            System.out.println("\nSuccessfully loaded college data from previous session!");
+            // Restore static ID counter for Lecturers
+            int maxId = 0;
+            for (Lecturer l : college.getLecturers()) {
+                if (l.getId() > maxId) {
+                    maxId = l.getId();
+                }
+            }
+            Lecturer.setCounter(maxId);
+        }
 
         int choice = -1;
 
         while (choice != 0) {
-            System.out.println("\n--- Staff Management Menu - " + collegeName + " College ---");
-            System.out.println("0- EXIT");
+            System.out.println("\n--- Staff Management Menu - " + college.getName() + " College ---");
+            System.out.println("0- EXIT (And save data)");
             System.out.println("1- Add lecturer");
             System.out.println("2- Add committee");
             System.out.println("3- Add member to committee");
@@ -40,7 +54,6 @@ public class Main {
             System.out.println("14- Clone a committee");
             System.out.print("Select an option: ");
 
-            // Parse integer from string input to prevent InputMismatchException
             try {
                 choice = Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
@@ -51,7 +64,8 @@ public class Main {
             try {
                 switch (choice) {
                     case 0:
-                        System.out.println("Exiting program");
+                        saveCollegeData(college);
+                        System.out.println("Exiting program and saving data.");
                         break;
                     case 1:
                         addNewLecturerToCollege(college, scanner);
@@ -102,7 +116,6 @@ public class Main {
             } catch (CollegeSystemException e) {
                 System.out.println("Action Failed: " + e.getMessage());
             } catch (Exception e) {
-                // Catch any other unexpected exceptions to prevent the application from crashing
                 System.out.println("An unexpected error occurred: " + e.getMessage());
             }
         }
@@ -110,7 +123,28 @@ public class Main {
         scanner.close();
     }
 
-    // THIS IS SOME TEST DATA WE PUT FOR TESTING PURPOSES, NOT PART OF THE MAIN LOGIC
+    private static void saveCollegeData(College college) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(DATA_FILE))) {
+            out.writeObject(college);
+            System.out.println("Data saved successfully.");
+        } catch (IOException e) {
+            System.out.println("Failed to save data: " + e.getMessage());
+        }
+    }
+
+    private static College loadCollegeData() {
+        File file = new File(DATA_FILE);
+        if (!file.exists()) {
+            return null;
+        }
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+            return (College) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Could not load previous data. Starting fresh...");
+            return null;
+        }
+    }
+
     public static void setupTestData(College college) {
         try {
             Doctor doc1 = new Doctor("Dr. Cohen", "Computer Science", 15000, null);
@@ -139,8 +173,8 @@ public class Main {
             college.addLecturerToDepartment(doc2.getId(), "Mathematics");
             college.addLecturerToDepartment(doc3.getId(), "Mathematics");
 
-            college.addCommittee("Curriculum", prof1.getId());
-            college.addCommittee("Admissions", doc1.getId());
+            college.addCommittee("Curriculum", prof1.getId(), eCommitteeType.DOCTOR);
+            college.addCommittee("Admissions", doc1.getId(), eCommitteeType.DOCTOR);
 
             college.addMemberToCommittee(doc2.getId(), "Curriculum");
             college.addMemberToCommittee(doc3.getId(), "Admissions");
@@ -150,7 +184,6 @@ public class Main {
             System.out.println("\nError setting up test data: " + e.getMessage());
         }
     }
-    // END OF TEST DATA SETUP
 
     public static void addNewLecturerToCollege(College college, Scanner scanner) throws CollegeSystemException {
         System.out.println("Enter lecturer name: ");
@@ -160,7 +193,6 @@ public class Main {
             name = scanner.nextLine();
         }
         System.out.print("Degree Type (1-BA, 2-MA, 3-PHD, 4-PROFESSOR): ");
-        // Parse integer directly to handle non-numeric inputs without crashing
         int degreeChoice;
         try {
             degreeChoice = Integer.parseInt(scanner.nextLine().trim());
@@ -176,7 +208,6 @@ public class Main {
         System.out.println("Enter degree name: ");
         String degreeName = scanner.nextLine();
         System.out.println("Enter salary: ");
-        // Parse double directly to handle non-numeric inputs without crashing
         double salary;
         try {
             salary = Double.parseDouble(scanner.nextLine().trim());
@@ -195,7 +226,6 @@ public class Main {
             }
             
             System.out.print("How many articles do you want to add now? ");
-            // Parse integer to prevent InputMismatchException
             int numArticles;
             try {
                 numArticles = Integer.parseInt(scanner.nextLine().trim());
@@ -218,14 +248,37 @@ public class Main {
         System.out.print("Enter committee name: ");
         String commName = scanner.nextLine();
         System.out.print("Enter chairman ID (Must be PhD or Professor): ");
-        // Safe input handling for integer to prevent scanner bugs
         int chairId;
         try {
             chairId = Integer.parseInt(scanner.nextLine().trim());
         } catch (NumberFormatException e) {
             throw new CollegeSystemException("Invalid input: Expected a numeric value for chairman ID.");
         }
-        college.addCommittee(commName, chairId);
+
+        System.out.println("Select regular members degree level (1- Regular [BA/MA], 2- Doctor [PHD], 3- Professor [PROFESSOR]): ");
+        int typeChoice;
+        try {
+            typeChoice = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            throw new CollegeSystemException("Invalid input: Expected a numeric value.");
+        }
+
+        eCommitteeType type;
+        switch (typeChoice) {
+            case 1:
+                type = eCommitteeType.REGULAR;
+                break;
+            case 2:
+                type = eCommitteeType.DOCTOR;
+                break;
+            case 3:
+                type = eCommitteeType.PROFESSOR;
+                break;
+            default:
+                throw new CollegeSystemException("Invalid committee type selection.");
+        }
+
+        college.addCommittee(commName, chairId, type);
         System.out.println("\nCommittee " + commName + " has been added.");
     }
 
@@ -233,7 +286,6 @@ public class Main {
         System.out.print("Enter committee name: ");
         String committeeNameAdd = scanner.nextLine();
         System.out.print("Enter lecturer's ID: ");
-        // Robust integer parsing to avoid crashes
         int lecturerIdAdd;
         try {
             lecturerIdAdd = Integer.parseInt(scanner.nextLine().trim());
@@ -248,7 +300,6 @@ public class Main {
         System.out.print("Enter committee name: ");
         String committeeNameUpdate = scanner.nextLine();
         System.out.print("Enter new chairman's ID: ");
-        // Robust input parsing
         int lecturerIdUpdate;
         try {
             lecturerIdUpdate = Integer.parseInt(scanner.nextLine().trim());
@@ -263,7 +314,6 @@ public class Main {
         System.out.print("Enter committee name: ");
         String committeeNameRemove = scanner.nextLine();
         System.out.print("Enter lecturer's ID for removal: ");
-        // Input validation with parseInt
         int lecturerIdRemove;
         try {
             lecturerIdRemove = Integer.parseInt(scanner.nextLine().trim());
@@ -282,7 +332,6 @@ public class Main {
             departmentName = scanner.nextLine();
         }
         System.out.print("Enter a maximum number for students in the department: ");
-        // Parse integer to prevent exceptions on invalid input
         int maxStudentsNum;
         try {
             maxStudentsNum = Integer.parseInt(scanner.nextLine().trim());
@@ -298,7 +347,6 @@ public class Main {
         System.out.print("Enter department name: ");
         String departmentName = scanner.nextLine();
         System.out.print("Enter lecturer ID: ");
-        // Safely parse int from string
         int lecturerIdDepartment;
         try {
             lecturerIdDepartment = Integer.parseInt(scanner.nextLine().trim());
@@ -318,7 +366,6 @@ public class Main {
 
     public static void compareDoctorsByArticles(College college, Scanner scanner) {
         System.out.print("Enter first Doctor/Professor ID: ");
-        // Input mismatch prevention using try-catch for parseInt
         int id1;
         try {
             id1 = Integer.parseInt(scanner.nextLine().trim());
@@ -365,7 +412,6 @@ public class Main {
         }
 
         System.out.println("Compare by: 1- Total members count, 2- Total articles count");
-        // Safe input handling
         int criteria;
         try {
             criteria = Integer.parseInt(scanner.nextLine().trim());
