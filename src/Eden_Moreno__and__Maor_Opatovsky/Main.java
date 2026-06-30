@@ -147,37 +147,48 @@ public class Main {
 
     public static void setupTestData(College college) {
         try {
-            Doctor doc1 = new Doctor("Dr. Cohen", "Computer Science", 15000, null);
+            Doctor doc1 = new Doctor("Dr. Yossi Cohen", "Computer Science", 15000, null);
             doc1.addArticle("Java Basics");
-            Doctor doc2 = new Doctor("Dr. Levi", "Mathematics", 16000, null);
+            Doctor doc2 = new Doctor("Dr. Moshe Levi", "Mathematics", 16000, null);
             doc2.addArticle("Calculus I");
-            Doctor doc3 = new Doctor("Dr. Ben-David", "Physics", 15500, null);
+            Doctor doc3 = new Doctor("Dr. Dana Ben-David", "Physics", 15500, null);
             doc3.addArticle("Quantum Mechanics");
 
-            Professor prof1 = new Professor("Prof. Goldstein", "Software Engineering", 20000, null, "Afeka College of Engineering");
+            Professor prof1 = new Professor("Prof. Avi Goldstein", "Software Engineering", 20000, null, "Afeka College of Engineering");
             prof1.addArticle("Advanced Design Patterns");
+
+            Lecturer lec1 = new Lecturer("Shira Mizrahi", eDegree.BA, "Physics", 10000, null);
+            Lecturer lec2 = new Lecturer("Omer Peretz", eDegree.MA, "Mathematics", 12000, null);
 
             college.addLecturer(doc1);
             college.addLecturer(doc2);
             college.addLecturer(doc3);
             college.addLecturer(prof1);
+            college.addLecturer(lec1);
+            college.addLecturer(lec2);
 
             Department csDept = new Department("Computer Science", 500);
             Department mathDept = new Department("Mathematics", 300);
+            Department physicsDept = new Department("Physics", 100);
 
             college.addDepartment(csDept);
             college.addDepartment(mathDept);
+            college.addDepartment(physicsDept);
 
             college.addLecturerToDepartment(doc1.getId(), "Computer Science");
             college.addLecturerToDepartment(prof1.getId(), "Computer Science");
             college.addLecturerToDepartment(doc2.getId(), "Mathematics");
             college.addLecturerToDepartment(doc3.getId(), "Mathematics");
+            college.addLecturerToDepartment(lec1.getId(), "Physics");
+            college.addLecturerToDepartment(lec2.getId(), "Mathematics");
 
             college.addCommittee("Curriculum", prof1.getId(), eCommitteeType.DOCTOR);
             college.addCommittee("Admissions", doc1.getId(), eCommitteeType.DOCTOR);
+            college.addCommittee("Student Affairs", doc2.getId(), eCommitteeType.REGULAR);
 
             college.addMemberToCommittee(doc2.getId(), "Curriculum");
             college.addMemberToCommittee(doc3.getId(), "Admissions");
+            college.addMemberToCommittee(lec1.getId(), "Student Affairs");
 
             System.out.println("\nTest data setup successfully.");
         } catch (CollegeSystemException e) {
